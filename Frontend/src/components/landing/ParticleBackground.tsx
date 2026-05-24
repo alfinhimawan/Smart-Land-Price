@@ -64,7 +64,7 @@ export const ParticleBackground = () => {
     window.addEventListener('resize', handleResize);
 
     // Get color based on 3D position
-    const getColor = (x: number, y: number, z: number) => {
+    const getColor = (x: number, z: number) => {
       // Create a gradient from blue (-1) to orange/yellow (+1)
       const t = (x + 1) / 2; // 0 to 1
       
@@ -133,7 +133,7 @@ export const ParticleBackground = () => {
           // Draw a small dash/ellipse rather than a perfect circle to mimic the reference
           ctx.ellipse(projX, projY, size * 1.5, size * 0.5, -rotY + Math.PI/4, 0, Math.PI * 2);
           
-          ctx.fillStyle = getColor(x1, y2, z2);
+          ctx.fillStyle = getColor(x1, z2);
           ctx.globalAlpha = opacity;
           ctx.fill();
         }

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { MapPin, Github, Twitter, Linkedin, Mail, Home, Map, Info, CheckCircle, Crosshair } from 'lucide-react'
+import { MapPin, Twitter, Linkedin, Mail, Home, Map, Info, CheckCircle } from 'lucide-react'
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear()
