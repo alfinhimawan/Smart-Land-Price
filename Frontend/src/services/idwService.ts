@@ -3,7 +3,7 @@ import { SamplePoint, Coordinate, PredictionResult } from '@/types';
 /**
  * Calculate Euclidean distance between two coordinates
  */
-const calculateDistance = (coord1: Coordinate, coord2: Coordinate): number => {
+export const calculateDistance = (coord1: Coordinate, coord2: Coordinate): number => {
   const lat1 = (coord1.lat * Math.PI) / 180;
   const lat2 = (coord2.lat * Math.PI) / 180;
   const deltaLat = ((coord2.lat - coord1.lat) * Math.PI) / 180;
@@ -97,6 +97,7 @@ export const predictPrice = (
     coordinates: coordinate,
     radiusUsed: radius,
     powerUsed: power,
+    totalSamplesUsed: pointsToUse.length,
     timestamp: new Date(),
   };
 };
