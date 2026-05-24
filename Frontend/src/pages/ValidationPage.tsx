@@ -46,7 +46,7 @@ export default function ValidationPage() {
             transition={{ delay: 1.5, duration: 0.8 }}
             className="section-subtitle mx-auto"
           >
-            Academic validation of IDW interpolation calculations and system accuracy
+            Validasi akademis terhadap akurasi kalkulasi interpolasi spasial IDW
           </motion.p>
         </div>
 
@@ -65,34 +65,34 @@ export default function ValidationPage() {
               transition={{ duration: 0.5 }}
             >
               <Card variant="glass">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Manual Calculation Example</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">Contoh Perhitungan Manual</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <p>
-                    For validation purposes, here's a detailed manual calculation of the IDW interpolation process:
+                    Sebagai bentuk transparansi dan validasi, berikut adalah simulasi perhitungan IDW secara manual berdasarkan 3 sampel terdekat dari dataset asli IKN:
                   </p>
 
                   <div className="bg-card p-4 rounded-lg font-mono text-sm space-y-2">
-                    <p className="text-primary">Example: Predicting price at (−2.18, 111.48)</p>
+                    <p className="text-primary">Target: Memprediksi harga pada koordinat (−1.036092, 116.977386)</p>
                     <p className="text-muted-foreground">
-                      Nearby sample points and their distances:
+                      Titik sampel terdekat beserta jarak (km) dan harga per meternya:
                     </p>
-                    <p>Point 1: Distance = 0.005, Price = 450,000</p>
-                    <p>Point 2: Distance = 0.012, Price = 520,000</p>
-                    <p>Point 3: Distance = 0.018, Price = 380,000</p>
+                    <p>Titik 1: Jarak = 1.96 km, Harga = Rp 8.870.000 (Kec. Samboja - Kawasan Perumahan)</p>
+                    <p>Titik 2: Jarak = 2.00 km, Harga = Rp 9.710.000 (Hutan Lindung Samboja)</p>
+                    <p>Titik 3: Jarak = 2.41 km, Harga = Rp 10.280.000 (Km 38 Samboja)</p>
                   </div>
 
                   <p>
-                    Using IDW formula with power = 2:
+                    Menggunakan formula Inverse Distance Weighting dengan nilai pangkat (p) = 2:
                   </p>
 
                   <div className="bg-card p-4 rounded-lg font-mono text-sm text-primary">
-                    <p>Weight₁ = 1 / (0.005)² = 40,000</p>
-                    <p>Weight₂ = 1 / (0.012)² = 6,944</p>
-                    <p>Weight₃ = 1 / (0.018)² = 3,086</p>
+                    <p>Bobot₁ = 1 / (1.96)² = 0.2603</p>
+                    <p>Bobot₂ = 1 / (2.00)² = 0.2500</p>
+                    <p>Bobot₃ = 1 / (2.41)² = 0.1722</p>
                     <p className="text-foreground mt-2">
-                      Z = (40000×450000 + 6944×520000 + 3086×380000) / (40000 + 6944 + 3086)
+                      Z = (0.2603×8.870.000 + 0.2500×9.710.000 + 0.1722×10.280.000) / (0.2603 + 0.2500 + 0.1722)
                     </p>
-                    <p className="text-success">Result: ≈ 456,200 IDR</p>
+                    <p className="text-success font-bold mt-1">Hasil: ≈ Rp 9.533.446 / m²</p>
                   </div>
                 </div>
               </Card>
@@ -105,22 +105,22 @@ export default function ValidationPage() {
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <Card variant="glass">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Accuracy Metrics</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">Metrik Akurasi LOOCV</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <p className="text-muted-foreground text-sm">Mean Absolute Error (MAE)</p>
-                    <p className="text-3xl font-bold gradient-text">±45,200</p>
-                    <p className="text-xs text-muted-foreground">Average prediction deviation</p>
+                    <p className="text-3xl font-bold gradient-text">±Rp 1.6M</p>
+                    <p className="text-xs text-muted-foreground">Penyimpangan absolut rata-rata: Rp 1.604.408</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-muted-foreground text-sm">Root Mean Square Error (RMSE)</p>
-                    <p className="text-3xl font-bold text-primary">±52,800</p>
-                    <p className="text-xs text-muted-foreground">Standard error measurement</p>
+                    <p className="text-3xl font-bold text-primary">±Rp 3.1M</p>
+                    <p className="text-xs text-muted-foreground">Nilai standar error prediksi: Rp 3.187.199</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-muted-foreground text-sm">Coefficient of Determination (R²)</p>
-                    <p className="text-3xl font-bold text-success">0.92</p>
-                    <p className="text-xs text-muted-foreground">92% variance explained</p>
+                    <p className="text-3xl font-bold text-emerald-500">0.24</p>
+                    <p className="text-xs text-muted-foreground">Mampu menjelaskan 24% variasi (wajar pada set spasial kecil)</p>
                   </div>
                 </div>
               </Card>
@@ -133,26 +133,24 @@ export default function ValidationPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <Card variant="glass">
-                <h2 className="text-2xl font-bold text-foreground mb-6">Validation Methodology</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-6">Metodologi Validasi</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <div>
-                    <h3 className="font-semibold text-foreground mb-2">Cross-Validation Approach</h3>
+                    <h3 className="font-semibold text-foreground mb-2">Leave-One-Out Cross-Validation (LOOCV)</h3>
                     <p>
-                      The system uses leave-one-out cross-validation to assess prediction accuracy. Each sample point
-                      is temporarily removed and predicted using remaining points.
+                      Sistem mengevaluasi performa menggunakan pendekatan LOOCV terhadap keseluruhan dataset. Secara bergiliran, setiap titik sampel tunggal dieksklusi sementara sisa titik digunakan untuk memprediksi harga pada titik yang hilang tersebut.
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-2">Parameter Optimization</h3>
+                    <h3 className="font-semibold text-foreground mb-2">Penanganan Pencilan (Outlier)</h3>
                     <p>
-                      IDW power parameter is optimized to minimize prediction error. Current optimal value: p = 2.0
+                      Sebelum interpolasi dilakukan, metode *Interquartile Range (IQR)* diterapkan secara ketat untuk menyingkirkan harga ekstrem yang dapat membiasakan pembobotan jarak.
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-2">Distance Metric</h3>
+                    <h3 className="font-semibold text-foreground mb-2">Metrik Jarak Geosfer</h3>
                     <p>
-                      Great-circle distance (haversine formula) is used for accurate geographic distance calculations
-                      between coordinates.
+                      Perhitungan jarak geografis menggunakan formula haversine yang memperhitungkan lengkungan bumi untuk menjamin akurasi radius pencarian.
                     </p>
                   </div>
                 </div>

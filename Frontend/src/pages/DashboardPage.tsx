@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { PageContainer } from '@/components/layout/PageContainer'
@@ -8,26 +8,24 @@ import { CoordinateInfo } from '@/components/prediction/CoordinateInfo'
 import { LoadingOverlay } from '@/components/prediction/LoadingOverlay'
 import { StatisticsGrid } from '@/components/prediction/StatisticsGrid'
 import { Button, Card } from '@/components/ui'
-import { samplePoints, iknBoundary } from '@/data/samplePoints'
-import { predictPrice } from '@/services/idwService'
+import { fetchSamplePoints, fetchPrediction } from '@/services/apiService'
 import { filterPointsByDistance } from '@/utils/heatmapUtils'
 import { Coordinate, PredictionResult, SamplePoint } from '@/types'
 import { motion } from 'framer-motion'
-import { RotateCcw, Zap, Map, List } from 'lucide-react'
+import { RotateCcw, Zap, Map, List, MapPin } from 'lucide-react'
 import { IDW_CONFIG } from '@/utils/constants'
-
-type DashboardTab = 'map' | 'data'
+import Swal from 'sweetalert2'
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<DashboardTab>('map')
   const [selectedCoordinate, setSelectedCoordinate] = useState<Coordinate | null>(null)
   const [selectedPoint, setSelectedPoint] = useState<SamplePoint | null>(null)
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null)
+  const [samplePoints, setSamplePoints] = useState<SamplePoint[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [idwPower, setIdwPower] = useState(IDW_CONFIG.defaultPower)
   const [radiusFilter, setRadiusFilter] = useState(IDW_CONFIG.defaultRadius)
   const [showHeatmap, setShowHeatmap] = useState(true)
-  const [distanceFilter, setDistanceFilter] = useState(2.0)
+  const [distanceFilter, setDistanceFilter] = useState(50.0)
 
   const handleLocationSelect = useCallback((coordinate: Coordinate) => {
     setSelectedCoordinate(coordinate)
@@ -38,17 +36,41 @@ export default function DashboardPage() {
     setSelectedPoint(point)
   }, [])
 
+  // Fetch sample points on component mount
+  useEffect(() => {
+    const loadSamplePoints = async () => {
+      const points = await fetchSamplePoints();
+      setSamplePoints(points);
+      if (points.length > 0) {
+        setSelectedPoint(points[0]);
+      }
+    };
+    loadSamplePoints();
+  }, []);
+
   const handlePredict = useCallback(async () => {
     if (!selectedCoordinate) return
 
     setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    const result = predictPrice(selectedCoordinate, samplePoints, idwPower, radiusFilter)
-    setPredictionResult(result)
-    setIsLoading(false)
-  }, [selectedCoordinate, idwPower, radiusFilter])
+    try {
+      const result = await fetchPrediction(selectedCoordinate, radiusFilter)
+      result.radiusUsed = radiusFilter
+      result.powerUsed = idwPower
+      setPredictionResult(result)
+    } catch (error: any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Di Luar Jangkauan',
+        text: error.message,
+        confirmButtonColor: '#00D1FF',
+        background: '#1e293b',
+        color: '#f8fafc',
+      })
+      setPredictionResult(null)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [selectedCoordinate])
 
   const handleReset = useCallback(() => {
     setSelectedCoordinate(null)
@@ -61,7 +83,18 @@ export default function DashboardPage() {
   // Calculate filtered points for display
   const visiblePoints = useMemo(() => {
     return filterPointsByDistance(samplePoints, distanceFilter)
-  }, [distanceFilter])
+  }, [distanceFilter, samplePoints])
+
+  // Automatically select the first visible point if the current selection is no longer visible
+  useEffect(() => {
+    if (visiblePoints.length > 0) {
+      if (!selectedPoint || !visiblePoints.find(p => p.id === selectedPoint.id)) {
+        setSelectedPoint(visiblePoints[0])
+      }
+    } else {
+      setSelectedPoint(null)
+    }
+  }, [visiblePoints, selectedPoint])
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -114,7 +147,7 @@ export default function DashboardPage() {
             {/* Top Statistics */}
             <div className="bg-card border border-card-border rounded-xl p-5 shadow-sm">
                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Ringkasan Area Nusantara</h3>
-               <StatisticsGrid samplePoints={samplePoints} />
+               <StatisticsGrid samplePoints={visiblePoints} />
             </div>
 
             {/* Main Interactive Workspace */}
@@ -134,7 +167,6 @@ export default function DashboardPage() {
                      onLocationSelect={handleLocationSelect}
                      selectedLocation={selectedCoordinate}
                      samplePoints={samplePoints}
-                     regionBound={iknBoundary}
                      showHeatmap={showHeatmap}
                      radiusFilter={distanceFilter}
                    />
@@ -152,9 +184,7 @@ export default function DashboardPage() {
                       onHeatmapToggle={setShowHeatmap}
                       radiusFilter={distanceFilter}
                       onRadiusChange={setDistanceFilter}
-                      maxRadius={2.5}
-                      visiblePointsCount={visiblePoints.length}
-                      totalPointsCount={samplePoints.length}
+                      maxRadius={IDW_CONFIG.maxRadius}
                     />
                  </div>
                </Card>
@@ -186,7 +216,7 @@ export default function DashboardPage() {
                    {/* Radius Slider */}
                    <div className="space-y-2">
                      <div className="flex justify-between items-center">
-                       <label className="text-sm font-medium text-foreground">Radius Pencarian (km)</label>
+                       <label className="text-sm font-medium text-foreground">Radius Pengaruh IDW (km)</label>
                        <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded">{radiusFilter.toFixed(3)}</span>
                      </div>
                      <input
@@ -207,22 +237,25 @@ export default function DashboardPage() {
                        <CoordinateInfo coordinate={selectedCoordinate} />
                      </div>
                    ) : (
-                     <div className="p-6 rounded-lg border-2 border-dashed border-card-border flex flex-col items-center justify-center text-center bg-card/30 h-28">
-                       <p className="text-sm text-muted-foreground">Klik koordinat pada peta untuk memulai.</p>
+                     <div className="p-6 rounded-xl border-2 border-dashed border-primary/20 flex flex-col items-center justify-center text-center bg-gradient-to-br from-card/30 to-primary/5 h-28 group transition-all">
+                       <MapPin className="w-6 h-6 text-primary/40 mb-2 group-hover:scale-110 transition-transform" />
+                       <p className="text-xs text-muted-foreground">Klik lokasi di peta untuk memulai prediksi.</p>
                      </div>
                    )}
 
                    <div className="flex gap-2">
                      <Button
                        variant="primary"
-                       className="w-full flex-1 py-2.5"
+                       className="w-full flex-1 py-2.5 relative overflow-hidden group shadow-lg shadow-primary/20"
                        disabled={!selectedCoordinate}
                        onClick={handlePredict}
                      >
-                       Prediksi Harga
+                       <span className="relative z-10 flex items-center justify-center gap-2">
+                         <Zap className="w-4 h-4" /> Kalkulasi Harga
+                       </span>
                      </Button>
-                     <Button variant="outline" className="px-4" onClick={handleReset} aria-label="Reset">
-                       <RotateCcw className="w-5 h-5" />
+                     <Button variant="outline" className="px-4 hover:bg-card-border transition-colors" onClick={handleReset} aria-label="Reset">
+                       <RotateCcw className="w-4 h-4" />
                      </Button>
                    </div>
                  </div>
@@ -245,23 +278,25 @@ export default function DashboardPage() {
             {/* Bottom Data Section */}
             <Card variant="glass" className="shadow-md p-6">
               <h2 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2 border-b border-card-border pb-3">
-                <List className="w-5 h-5 text-primary" /> Data Referensi Sampel Lahan
+                <List className="w-5 h-5 text-primary" /> 
+                Data Referensi Sampel Lahan
+                <span className="text-xs font-normal text-muted-foreground bg-foreground/10 px-2 py-1 rounded-full ml-2">
+                  {visiblePoints.length} titik
+                </span>
               </h2>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div className="xl:col-span-2">
                   <SamplePointsExplorer
                     points={visiblePoints}
                     onPointSelect={handlePointSelect}
                     selectedPointId={selectedPoint?.id}
-                    maxDistanceFilter={distanceFilter}
-                    onDistanceFilterChange={setDistanceFilter}
                   />
                 </div>
                 
-                <div className="lg:col-span-1">
+                <div className="xl:col-span-1">
                   {selectedPoint ? (
-                    <div className="p-5 rounded-xl bg-card border border-card-border shadow-sm sticky top-24">
+                    <div className="p-5 rounded-xl bg-card border border-card-border shadow-sm sticky top-28">
                       <h3 className="text-base font-bold text-foreground mb-4 border-b border-card-border pb-2">Detail Titik Sampel</h3>
                       <div className="space-y-4 text-sm">
                         <div>
@@ -288,7 +323,7 @@ export default function DashboardPage() {
                     </div>
                   ) : (
                     <div className="p-6 rounded-xl border-2 border-dashed border-card-border flex items-center justify-center text-center bg-card/30 h-full min-h-[200px]">
-                      <p className="text-sm text-muted-foreground">Pilih data lahan pada senarai di samping untuk melihat detail.</p>
+                      <p className="text-sm text-muted-foreground">Sesuaikan radius filter untuk menemukan lahan.</p>
                     </div>
                   )}
                 </div>

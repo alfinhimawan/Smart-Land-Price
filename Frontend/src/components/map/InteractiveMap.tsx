@@ -1,17 +1,15 @@
-import { MapContainer, TileLayer, Marker, Popup, FeatureGroup, CircleMarker, Polyline } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, FeatureGroup, CircleMarker, useMapEvents } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
-import { useEffect, useRef, useState } from 'react'
+
 import { SamplePoint, Coordinate } from '@/types'
 import L from 'leaflet'
 import { getPriceColor, getHeatmapStats } from '@/utils/heatmapUtils'
 import { formatCurrency } from '@/services/idwService'
-import { tollRoutes } from '@/data/samplePoints'
 
 interface InteractiveMapProps {
   onLocationSelect: (coordinate: Coordinate) => void
   selectedLocation?: Coordinate | null
   samplePoints: SamplePoint[]
-  regionBound: any
   showHeatmap?: boolean
   radiusFilter?: number
 }
@@ -20,37 +18,27 @@ export const InteractiveMap = ({
   onLocationSelect,
   selectedLocation,
   samplePoints,
-  regionBound,
   showHeatmap = true,
   radiusFilter = 2,
 }: InteractiveMapProps) => {
-  const mapRef = useRef<L.Map | null>(null)
-  const [markerPosition, setMarkerPosition] = useState<Coordinate | null>(selectedLocation || null)
 
-  const center: LatLngExpression = [-2.1833, 111.4833]
+  // Komponen khusus untuk menangani klik pada React-Leaflet v3+
+  const MapClickHandler = () => {
+    useMapEvents({
+      click(e) {
+        const { lat, lng } = e.latlng
+        const coordinate = { lat, lng }
+        onLocationSelect(coordinate)
+      },
+    })
+    return null
+  }
 
-  const [isDarkMode, setIsDarkMode] = useState(
-    typeof document !== 'undefined' ? document.documentElement.classList.contains('dark') : true
-  );
+  // Update center to point to IKN (Balikpapan-Sepaku corridor)
+  const center: LatLngExpression = [-1.15, 116.82]
 
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          setIsDarkMode(document.documentElement.classList.contains('dark'));
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, { attributes: true });
-    return () => observer.disconnect();
-  }, []);
-
-  const tileUrl = isDarkMode 
-    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+  // Peta dikunci ke tema Terang (Voyager) agar jalanan dan area tanah lebih jelas terbaca
+  const tileUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
   // Get heatmap statistics
   const heatmapStats = getHeatmapStats(samplePoints)
@@ -74,34 +62,10 @@ export const InteractiveMap = ({
     popupAnchor: [0, -16],
   })
 
-  const handleMapClick = (e: L.LeafletMouseEvent) => {
-    const { lat, lng } = e.latlng
-
-    // Check if click is within region bounds
-    if (
-      lat >= regionBound.minLat &&
-      lat <= regionBound.maxLat &&
-      lng >= regionBound.minLng &&
-      lng <= regionBound.maxLng
-    ) {
-      const coordinate = { lat, lng }
-      setMarkerPosition(coordinate)
-      onLocationSelect(coordinate)
-    }
-  }
-
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.on('click', handleMapClick)
-      return () => {
-        mapRef.current?.off('click', handleMapClick)
-      }
-    }
-  }, [regionBound])
+  // HandleMapClick dan useEffect dihapus karena sudah diganti dengan useMapEvents
 
   return (
     <MapContainer
-      ref={mapRef}
       center={center}
       zoom={12}
       className="w-full h-full bg-background z-0"
@@ -111,33 +75,13 @@ export const InteractiveMap = ({
         attribution='&copy; OpenStreetMap contributors &copy; CARTO'
       />
 
+      <MapClickHandler />
+
       {/* Region boundary polygon */}
       <FeatureGroup>
         <Popup>Region Boundary</Popup>
       </FeatureGroup>
 
-      {/* Toll Routes - Display with distinct colors */}
-      {tollRoutes.map((route) => (
-        <Polyline
-          key={route.id}
-          positions={route.coordinates as [number, number][]}
-          pathOptions={{
-            color: route.color,
-            weight: 4,
-            opacity: 0.8,
-            lineCap: 'round',
-            lineJoin: 'round',
-            dashArray: '5, 5',
-          }}
-        >
-          <Popup className="popup-custom">
-            <div className="text-sm space-y-2">
-              <p className="font-semibold text-foreground">{route.name}</p>
-              <p className="text-muted-foreground text-xs">{route.description}</p>
-            </div>
-          </Popup>
-        </Polyline>
-      ))}
       {showHeatmap &&
         filteredPoints.map((point) => {
           const color = getPriceColor(point.price, heatmapStats.minPrice, heatmapStats.maxPrice)
@@ -190,12 +134,12 @@ export const InteractiveMap = ({
         ))}
 
       {/* Selected location marker */}
-      {markerPosition && (
-        <Marker position={[markerPosition.lat, markerPosition.lng]} icon={selectedIcon}>
+      {selectedLocation && (
+        <Marker position={[selectedLocation.lat, selectedLocation.lng]} icon={selectedIcon}>
           <Popup>
             <div className="text-sm">
-              <p className="font-semibold text-foreground">Prediction Location</p>
-              <p className="text-muted-foreground">{markerPosition.lat.toFixed(4)}, {markerPosition.lng.toFixed(4)}</p>
+              <p className="font-semibold text-foreground">Lokasi Target</p>
+              <p className="text-muted-foreground">{selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}</p>
             </div>
           </Popup>
         </Marker>

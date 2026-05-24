@@ -21,6 +21,7 @@ export interface PredictionResult {
   radiusUsed: number;
   powerUsed: number;
   timestamp: Date;
+  totalSamplesUsed: number;
 }
 
 export interface DashboardState {

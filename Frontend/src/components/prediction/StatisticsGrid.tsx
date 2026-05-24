@@ -23,7 +23,7 @@ const StatCard = ({ label, value, icon, unit, variant = 'default' }: StatisticsC
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="p-3 rounded-lg bg-primary/10">{icon}</div>
-          {variant === 'highlight' && <Badge variant="primary" className="bg-primary/20 text-primary hover:bg-primary/30 border-none">Featured</Badge>}
+          {variant === 'highlight' && <Badge variant="info">Featured</Badge>}
         </div>
 
         <div>
@@ -44,9 +44,9 @@ interface StatisticsGridProps {
 
 export const StatisticsGrid = ({ samplePoints }: StatisticsGridProps) => {
   const prices = samplePoints.map((p) => p.price)
-  const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length)
-  const maxPrice = Math.max(...prices)
-  const minPrice = Math.min(...prices)
+  const avgPrice = prices.length > 0 ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : 0
+  const maxPrice = prices.length > 0 ? Math.max(...prices) : 0
+  const minPrice = prices.length > 0 ? Math.min(...prices) : 0
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {

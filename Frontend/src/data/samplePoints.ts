@@ -24,47 +24,42 @@ export const samplePoints: SamplePoint[] = [
 // These represent the main toll routes in the IKN region
 export const tollRoutes = [
   {
-    id: 'toll-main',
-    name: 'Main Toll Route',
+    id: 'toll-balsam',
+    name: 'Tol Balikpapan-Samarinda (Balsam)',
     color: '#FF6B6B',
-    description: 'Primary main toll route',
+    description: 'Jalan Tol Utama Kalimantan Timur',
     coordinates: [
-      [-2.15, 111.45],
-      [-2.18, 111.48],
-      [-2.20, 111.51],
-      [-2.22, 111.53],
+      [-1.221, 116.899], // Balikpapan
+      [-1.171, 116.938],
+      [-1.114, 116.969],
+      [-1.077, 116.983], // Samboja / KM 38
+      [-1.002, 117.009],
+      [-0.854, 117.065],
+      [-0.648, 117.091], // Samarinda
     ],
   },
   {
-    id: 'toll-secondary',
-    name: 'Secondary Toll Route',
+    id: 'toll-ikn',
+    name: 'Jalan Tol Akses IKN',
     color: '#4ECDC4',
-    description: 'Secondary toll connector',
+    description: 'Seksi 3A, 3B, dan 5A (Menuju KIPP)',
     coordinates: [
-      [-2.18, 111.45],
-      [-2.20, 111.47],
-      [-2.21, 111.50],
+      [-1.077, 116.983], // Simpang Susun Samboja (KM 38)
+      [-1.109, 116.879],
+      [-1.127, 116.793], // Simpang Tempadung
+      [-1.122, 116.732], // Jembatan Pulau Balang
+      [-1.050, 116.720],
+      [-0.975, 116.711], // Kawasan Inti IKN
     ],
-  },
-  {
-    id: 'toll-east',
-    name: 'East Connection',
-    color: '#95E1D3',
-    description: 'Eastern toll connection',
-    coordinates: [
-      [-2.14, 111.49],
-      [-2.17, 111.51],
-      [-2.20, 111.53],
-    ],
-  },
+  }
 ];
 
 // IKN Region boundary (approximate)
 export const iknBoundary = {
-  minLat: -2.25,
-  maxLat: -2.10,
-  minLng: 111.40,
-  maxLng: 111.55,
+  minLat: -1.30,
+  maxLat: -0.90,
+  minLng: 116.70,
+  maxLng: 117.00,
 };
 
 // Statistics

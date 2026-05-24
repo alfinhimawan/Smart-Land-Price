@@ -1,81 +1,98 @@
 import { motion } from 'framer-motion'
+import { idwFormulaBase64 } from '@/utils/idwFormulaBase64'
 
 export const IDWExplanation = () => {
   return (
-    <section className="py-20 px-4">
-      <div className="max-w-4xl mx-auto">
+    <section className="py-24 px-4 relative z-10">
+      <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
         >
-          <div className="space-y-12">
-            {/* Formula */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Mekanika <span className="text-primary">IDW</span></h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6 rounded-full opacity-70"></div>
+            <p className="text-muted-foreground text-xl max-w-2xl mx-auto">
+              Memahami logika matematika di balik prediksi harga lahan spasial.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(250px,auto)]">
+            
+            {/* Bento 1: Formula (Spans 2 columns on desktop) */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-card border border-card-border rounded-lg p-8 text-center"
+              className="md:col-span-2 row-span-1 card-glass p-8 md:p-12 relative overflow-hidden group flex flex-col justify-center items-center"
             >
-              <p className="text-muted-foreground text-sm mb-4">Rumus IDW (Inverse Distance Weighted)</p>
-              <p className="text-3xl font-mono text-primary font-bold">
-                Z(x₀) = Σ(Zᵢ/dᵢᵖ) / Σ(1/dᵢᵖ)
-              </p>
-              <p className="text-muted-foreground text-xs mt-4">Di mana p adalah parameter kekuatan yang mengontrol pengaruh jarak</p>
+              <div className="absolute -top-32 -right-32 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors duration-700" />
+              <p className="text-muted-foreground text-sm mb-8 font-semibold uppercase tracking-wider relative z-10">Rumus Matematis IDW</p>
+              
+              {/* Levitating Formula */}
+              <div className="bg-white/95 rounded-2xl p-6 md:p-8 shadow-xl shadow-primary/10 animate-float relative z-10 border border-white/20">
+                <img src={idwFormulaBase64} alt="Rumus IDW" className="h-16 md:h-24 object-contain mx-auto" />
+              </div>
             </motion.div>
 
-            {/* Explanation */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <h3 className="text-xl font-bold text-foreground mb-4">Apa itu IDW?</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Inverse Distance Weighted (IDW) adalah metode interpolasi spasial yang memperkirakan nilai di lokasi yang tidak terukur berdasarkan nilai dari titik yang diukur di dekatnya. Pengaruh dari titik yang dikenal berkurang seiring dengan jarak. Ini banyak digunakan dalam GIS untuk prediksi harga tanah, pemodelan elevasi, dan analisis lingkungan.
-                </p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <h3 className="text-xl font-bold text-foreground mb-4">Parameter Kekuatan (p)</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Parameter kekuatan mengontrol pengaruh jarak pada bobot prediksi. Nilai yang lebih tinggi (misalnya, p=3) memberi bobot lebih kepada titik yang lebih dekat dan kurang pada yang jauh. Nilai yang lebih rendah (misalnya, p=1) mendistribusikan bobot lebih merata. Default adalah p=2 untuk prediksi seimbang di sekitar jaringan tol IKN.
-                </p>
-              </motion.div>
-            </div>
-
-            {/* Key Variables */}
+            {/* Bento 2: Apa itu IDW? */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-card border border-card-border rounded-lg p-8"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="md:col-span-1 row-span-1 card-glass p-8 relative overflow-hidden group flex flex-col justify-center"
             >
-              <h3 className="text-xl font-bold text-foreground mb-6">Komponen Rumus</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <p className="font-mono text-primary mb-2">Z(x₀)</p>
-                  <p className="text-muted-foreground text-sm">Nilai prediksi di lokasi x₀</p>
+              <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-secondary/10 rounded-full blur-3xl group-hover:bg-secondary/20 transition-colors duration-700" />
+              <h3 className="text-2xl font-bold text-foreground mb-4 relative z-10">Apa itu IDW?</h3>
+              <p className="text-muted-foreground leading-relaxed relative z-10">
+                Teknik interpolasi deterministik yang mengasumsikan bahwa nilai di lokasi yang tidak terukur merupakan rata-rata tertimbang dari nilai-nilai di titik sampel terdekat. Semakin dekat sebuah sampel, semakin dominan pengaruhnya.
+              </p>
+            </motion.div>
+
+            {/* Bento 3: Parameter p */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="md:col-span-3 row-span-1 card-glass p-8 md:p-12 relative overflow-hidden"
+            >
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+                <div className="md:col-span-1 flex flex-col justify-center">
+                  <h3 className="text-3xl font-bold text-foreground mb-4">Parameter <span className="text-primary">Kekuatan (p)</span></h3>
+                  <p className="text-muted-foreground leading-relaxed mb-6">
+                    Sensitivitas jarak terhadap bobot. Mengontrol seberapa drastis pengaruh titik data menurun seiring bertambahnya jarak.
+                  </p>
                 </div>
-                <div>
-                  <p className="font-mono text-primary mb-2">Zᵢ</p>
-                  <p className="text-muted-foreground text-sm">Nilai yang dikenal di titik sampel i</p>
-                </div>
-                <div>
-                  <p className="font-mono text-primary mb-2">dᵢ</p>
-                  <p className="text-muted-foreground text-sm">Jarak antara x₀ dan titik sampel i</p>
-                </div>
-                <div>
-                  <p className="font-mono text-primary mb-2">p</p>
-                  <p className="text-muted-foreground text-sm">Parameter kekuatan (default: 2)</p>
+                
+                <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-background/50 border border-card-border p-6 rounded-xl hover:border-primary/50 transition-colors shadow-sm">
+                    <div className="text-2xl font-black text-primary mb-2">p = 2</div>
+                    <div className="text-sm text-foreground font-semibold mb-1">Default Ideal</div>
+                    <p className="text-sm text-muted-foreground">Keseimbangan sempurna antara titik terdekat dan titik yang sedikit lebih jauh.</p>
+                  </div>
+                  
+                  <div className="bg-background/50 border border-card-border p-6 rounded-xl hover:border-secondary/50 transition-colors shadow-sm">
+                    <div className="text-2xl font-black text-secondary mb-2">p &gt; 2</div>
+                    <div className="text-sm text-foreground font-semibold mb-1">Sangat Lokal</div>
+                    <p className="text-sm text-muted-foreground">Prediksi hanya sangat dipengaruhi oleh titik sampel yang paling dekat.</p>
+                  </div>
+                  
+                  <div className="bg-background/50 border border-card-border p-6 rounded-xl hover:border-emerald-500/50 transition-colors shadow-sm sm:col-span-2">
+                    <div className="text-2xl font-black text-emerald-500 mb-2">p &lt; 2</div>
+                    <div className="text-sm text-foreground font-semibold mb-1">Global & Merata</div>
+                    <p className="text-sm text-muted-foreground">Distribusi pengaruh lebih merata hingga ke titik-titik yang lebih jauh, menghaluskan fluktuasi lokal.</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
+            
           </div>
         </motion.div>
       </div>

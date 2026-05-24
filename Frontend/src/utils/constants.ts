@@ -25,11 +25,11 @@ export const MAP_CONFIG = {
 
 export const IDW_CONFIG = {
   defaultPower: 2,
-  defaultRadius: 0.05,
+  defaultRadius: 50.0,
   minPower: 0.5,
   maxPower: 5,
-  minRadius: 0.01,
-  maxRadius: 0.2,
+  minRadius: 0.1,
+  maxRadius: 50.0,
 };
 
 export const ANIMATION_CONFIG = {

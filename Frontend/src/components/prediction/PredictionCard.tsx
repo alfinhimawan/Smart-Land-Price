@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { PredictionResult } from '@/types'
-import { Card, Badge, Button } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { TrendingUp, Zap, MapPin, Download, Loader2 } from 'lucide-react'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
+import { generatePdfReport } from '@/utils/generatePdfReport'
 
 interface PredictionCardProps {
   result: PredictionResult
@@ -23,33 +22,19 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
   const [isExporting, setIsExporting] = useState(false)
 
   const exportToPDF = async () => {
-    if (!cardRef.current) return
-    
     try {
       setIsExporting(true)
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 2,
-        backgroundColor: '#0a0a0f', // Match dark theme bg
-      })
+      // Jeda kecil agar state loading muncul (karena PDF generation itu synchronous & blocking)
+      await new Promise((resolve) => setTimeout(resolve, 100))
       
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      })
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-      pdf.save(`Laporan-Prediksi-IDW-${new Date().getTime()}.pdf`)
+      generatePdfReport(result)
     } catch (error) {
       console.error('Failed to generate PDF', error)
     } finally {
       setIsExporting(false)
     }
   }
+
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: {
@@ -68,111 +53,117 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="flex items-center gap-2 border-primary/50 text-primary hover:bg-primary/10"
-          onClick={exportToPDF}
-          disabled={isExporting}
-        >
-          {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-          {isExporting ? 'Memproses PDF...' : 'Cetak Laporan PDF'}
-        </Button>
-      </div>
-      <motion.div
-        ref={cardRef}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="space-y-6 p-4 -mx-4 sm:mx-0 sm:p-0 rounded-xl"
-      >
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-4 flex flex-col" 
+      ref={cardRef}
+    >
       {/* Main Result Card */}
       <motion.div variants={itemVariants}>
-        <Card variant="gradient" className="border-2 border-primary/50 shadow-glow">
+        <div className="relative overflow-hidden rounded-xl bg-card border border-primary/20 shadow-lg p-5">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10" />
+          
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-foreground">Harga Tanah Prediksi</h3>
-              <Badge variant="success">Selesai</Badge>
+            <div className="flex items-center justify-between pb-3 border-b border-card-border/50">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-primary" />
+                <h3 className="text-sm font-bold text-foreground">Hasil Prediksi Harga</h3>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Harga Estimasi</p>
-              <p className="text-4xl font-bold gradient-text">{formatPrice(result.predictedPrice)}</p>
+            <div className="flex flex-col items-center justify-center py-2">
+              <p className="text-xs text-muted-foreground mb-1">Estimasi Nilai Pasar</p>
+              <div className="flex items-end gap-1">
+                <p className="text-4xl font-black text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.2)] tracking-tight">
+                  {formatPrice(result.predictedPrice)}
+                </p>
+                <span className="text-sm font-bold text-muted-foreground mb-1.5">/m²</span>
+              </div>
             </div>
 
-            <div className="pt-4 border-t border-card-border">
-              <div className="flex items-center gap-2 text-sm">
-                <Zap className="w-4 h-4 text-warning" />
-                <span className="text-muted-foreground">
-                  Level Kepercayaan: <span className="text-primary font-semibold">{result.confidence}%</span>
-                </span>
+            <div className="bg-background/50 rounded-lg p-3 space-y-2 border border-card-border/50">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-medium text-muted-foreground">Tingkat Kepercayaan (IDW)</span>
+                <span className="text-xs font-bold text-primary">{result.confidence}%</span>
+              </div>
+              <div className="h-1.5 w-full bg-foreground/5 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${result.confidence}%` }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                  className="h-full rounded-full bg-primary"
+                />
               </div>
             </div>
           </div>
-        </Card>
+        </div>
       </motion.div>
 
       {/* Info Grid */}
       <motion.div variants={itemVariants} className="grid grid-cols-2 gap-3">
-        {/* Coordinates */}
-        <Card>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-primary" />
-              <p className="text-xs font-semibold text-muted-foreground">Koordinat</p>
-            </div>
-            <p className="text-sm font-mono text-foreground">
-              {result.coordinates.lat.toFixed(4)}, {result.coordinates.lng.toFixed(4)}
-            </p>
-          </div>
-        </Card>
-
-        {/* Method */}
-        <Card>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-primary" />
-              <p className="text-xs font-semibold text-muted-foreground">Metode</p>
-            </div>
-            <p className="text-sm font-mono text-foreground">IDW (p={result.powerUsed})</p>
-          </div>
-        </Card>
+        <div className="p-3 rounded-lg bg-card border border-card-border shadow-sm flex flex-col items-center text-center">
+          <MapPin className="w-4 h-4 text-muted-foreground mb-1" />
+          <p className="text-[10px] font-medium text-muted-foreground uppercase mb-1">Koordinat Target</p>
+          <p className="text-xs font-mono font-semibold text-foreground">
+            {result.coordinates.lat.toFixed(4)}, {result.coordinates.lng.toFixed(4)}
+          </p>
+        </div>
+        <div className="p-3 rounded-lg bg-card border border-card-border shadow-sm flex flex-col items-center text-center">
+          <TrendingUp className="w-4 h-4 text-muted-foreground mb-1" />
+          <p className="text-[10px] font-medium text-muted-foreground uppercase mb-1">Parameter P</p>
+          <p className="text-xs font-mono font-semibold text-foreground">
+            {result.powerUsed}
+          </p>
+        </div>
       </motion.div>
-      {/* Nearest Points */}
+
+      {/* Nearest Points */}
       <motion.div variants={itemVariants}>
-        <Card>
+        <div className="p-4 rounded-xl bg-card border border-card-border shadow-sm">
+          <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider mb-3">Referensi Titik Terdekat</h4>
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-foreground">Titik Sampel Terdekat</h4>
-            <div className="space-y-2">
-              {result.nearestPoints.slice(0, 3).map((point) => (
-                <div key={point.id} className="flex items-center justify-between py-2 border-b border-card-border last:border-0">
-                  <div className="flex-1">
-                    <p className="text-sm text-muted-foreground">Titik #{point.id}</p>
-                    <p className="text-xs text-muted-foreground">{formatPrice(point.price)}</p>
+            {result.nearestPoints.slice(0, 3).map((point, index) => {
+              const weightPercent = (point.weight ?? 0) * 100;
+              return (
+                <div key={point.id} className="relative">
+                  <div className="flex justify-between items-center mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-foreground">#{point.id}</span>
+                      <span className="text-[10px] font-mono text-muted-foreground">{formatPrice(point.price)}/m²</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                      {weightPercent.toFixed(1)}% bobot
+                    </span>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs font-mono text-primary">
-                      {((point.weight ?? 0) * 100).toFixed(0)}% bobot
-                    </p>
+                  <div className="h-1 w-full bg-foreground/5 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${weightPercent}%` }}
+                      transition={{ duration: 0.8, delay: 0.1 + (index * 0.1) }}
+                      className="h-full bg-primary/60 rounded-full"
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
+              )
+            })}
           </div>
-        </Card>
+        </div>
       </motion.div>
 
-      {/* IDW Formula Info */}
-      <motion.div variants={itemVariants}>
-        <Card variant="solid" className="text-center">
-          <p className="text-xs text-muted-foreground font-mono">
-            Z(x₀) = Σ(Zᵢ/dᵢ²) / Σ(1/dᵢ²)
-          </p>
-        </Card>
+      {/* Actions */}
+      <motion.div variants={itemVariants} className="pt-2">
+        <Button 
+          variant="outline" 
+          className="w-full flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5 hover:text-primary transition-all py-5 border-dashed"
+          onClick={exportToPDF}
+          disabled={isExporting}
+        >
+          {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+          {isExporting ? 'Menyimpan Laporan...' : 'Unduh Laporan Prediksi (PDF)'}
+        </Button>
       </motion.div>
     </motion.div>
-    </div>
   )
 }
