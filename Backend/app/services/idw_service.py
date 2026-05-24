@@ -52,7 +52,7 @@ def filter_outliers_iqr(dataset: List[DataLahan]) -> List[DataLahan]:
 
 
 def calculate_idw(
-    target_x: float, target_y: float, dataset: List[DataLahan], power: float = 2.0
+    target_x: float, target_y: float, dataset: List[DataLahan], power: float = 2.0, radius_km: float = 50.0
 ) -> Dict[str, Any]:
     """
     Menghitung estimasi harga menggunakan Inverse Distance Weighting (IDW).
@@ -60,15 +60,23 @@ def calculate_idw(
     if not dataset:
         raise ValueError("Dataset tidak boleh kosong.")
 
-    # 1. Bersihkan outlier menggunakan IQR
-    cleaned_dataset = filter_outliers_iqr(dataset)
-    if not cleaned_dataset:
-        cleaned_dataset = (
-            dataset  # Fallback jika semuanya dianggap outlier (jarang terjadi)
-        )
+    # 1. Filter Geografis (Radius)
+    # Hanya sertakan titik yang berada dalam radius_km dari target
+    points_in_radius = []
+    for data in dataset:
+        dist = haversine_distance(target_x, target_y, data.latitude, data.longitude)
+        if dist <= radius_km:
+            points_in_radius.append(data)
 
-    # 2. Validasi Geografis: Cek apakah koordinat terlalu jauh dari area sampel
-    # Batas toleransi 50 kilometer menggunakan Haversine
+    if not points_in_radius:
+        raise ValueError(f"Tidak ada titik sampel dalam radius {radius_km} km.")
+
+    # 2. Bersihkan outlier menggunakan IQR (Hanya pada titik yang masuk radius)
+    cleaned_dataset = filter_outliers_iqr(points_in_radius)
+    if not cleaned_dataset:
+        cleaned_dataset = points_in_radius
+    # Batas toleransi 50 kilometer secara absolut ke titik terdekat sudah teratasi oleh radius_km
+    # Tapi kita pertahankan pengecekan jarak minimum untuk kasus radius yang di-set sangat besar
     min_distance = min(
         haversine_distance(target_x, target_y, data.latitude, data.longitude)
         for data in cleaned_dataset

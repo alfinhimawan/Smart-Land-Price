@@ -34,6 +34,7 @@ class LahanResponse(LahanBase):
 class PredictRequest(BaseModel):
     latitude: float
     longitude: float
+    radius_km: float = 50.0
 
 
 # Schema untuk logging matematis yang dikirimkan ke frontend (Panel Transparansi)
