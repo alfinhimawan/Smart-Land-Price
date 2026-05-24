@@ -1,7 +1,15 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/Backend/venv/Scripts/python.exe",
+    "python.defaultInterpreterPath": "Backend\\venv\\Scripts\\python.exe",
     "python.analysis.extraPaths": [
-        "${workspaceFolder}/Backend/venv/Lib/site-packages",
-        "${workspaceFolder}/Backend"
+        "Backend\\venv\\Lib\\site-packages",
+        "Backend"
+    ],
+    "flake8.args": [
+        "--max-line-length=100",
+        "--extend-ignore=E203,W292"
+    ],
+    "python.linting.flake8Args": [
+        "--max-line-length=100",
+        "--extend-ignore=E203,W292"
     ]
 }

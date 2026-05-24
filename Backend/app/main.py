@@ -19,9 +19,9 @@ def get_application():
         allow_headers=["*"],  # Mengizinkan semua header
     )
 
-    # TODO: Include routers from api endpoints here
-    # from app.api.endpoints import lahan
-    # app.include_router(lahan.router)
+    # Include API Routers
+    from app.api.routers import lahan_router
+    app.include_router(lahan_router.router, prefix=f"{settings.API_V1_STR}/lahan", tags=["lahan"])
 
     return app
 

@@ -1,4 +1,3 @@
-import os
 from pydantic_settings import BaseSettings
 
 
@@ -6,12 +5,12 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Smart Land Price API"
     API_V1_STR: str = "/api/v1"
 
-    # Database konfigurasi
-    POSTGRES_USER: str = os.getenv("POSTGRES_USER", "postgres")
-    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "postgres")
-    POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")
-    POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", "5432")
-    POSTGRES_DB: str = os.getenv("POSTGRES_DB", "webgis_ikn")
+    # Database konfigurasi (Nilai aktualnya dibaca otomatis dari file .env)
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_SERVER: str
+    POSTGRES_PORT: str = "5432"
+    POSTGRES_DB: str
 
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
@@ -25,6 +24,7 @@ class Settings(BaseSettings):
 
     class Config:
         case_sensitive = True
+        env_file = ".env"
 
 
 settings = Settings()

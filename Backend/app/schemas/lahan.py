@@ -28,3 +28,26 @@ class LahanResponse(LahanBase):
     class Config:
         # Mengizinkan pydantic membaca data dari SQLAlchemy model
         from_attributes = True
+
+
+# Schema untuk endpoint Prediksi IDW (Request)
+class PredictRequest(BaseModel):
+    latitude: float
+    longitude: float
+
+
+# Schema untuk logging matematis yang dikirimkan ke frontend (Panel Transparansi)
+class IDWLog(BaseModel):
+    id_lahan: int
+    nama_lokasi: Optional[str] = None
+    latitude: float
+    longitude: float
+    harga_per_meter: int
+    distance: float
+    weight: float | str
+
+
+# Schema untuk response hasil Prediksi IDW
+class PredictResponse(BaseModel):
+    predicted_price: float
+    logs: list[IDWLog]
