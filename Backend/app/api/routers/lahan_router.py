@@ -13,7 +13,7 @@ router = APIRouter()
 @router.get("/", response_model=List[schemas_lahan.LahanResponse])
 async def get_lahan(max_jarak: Optional[float] = None, db: Session = Depends(get_db)):
     """
-    Mengambil titik sampel lahan. 
+    Mengambil titik sampel lahan.
     Jika max_jarak diberikan, data akan disaring berdasarkan radius dari jalan tol.
     """
     if max_jarak is not None:
