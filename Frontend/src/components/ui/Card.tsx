@@ -15,9 +15,9 @@ export const Card = ({
   ...props
 }: CardProps) => {
   const variants = {
-    glass: 'bg-white/5 backdrop-blur-md border border-white/10',
-    solid: 'bg-dark-800 border border-dark-700',
-    gradient: 'bg-gradient-to-br from-dark-800 to-dark-900 border border-white/10',
+    glass: 'bg-foreground/5 backdrop-blur-md border border-card-border',
+    solid: 'bg-card border border-dark-700',
+    gradient: 'bg-gradient-to-br from-dark-800 to-dark-900 border border-card-border',
   }
 
   return (
@@ -25,7 +25,7 @@ export const Card = ({
       className={cn(
         'rounded-lg p-6',
         variants[variant],
-        hoverable && 'hover:bg-white/10 transition-all duration-300 cursor-pointer',
+        hoverable && 'hover:bg-foreground/10 transition-all duration-300 cursor-pointer',
         className
       )}
       {...props}

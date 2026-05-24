@@ -29,6 +29,29 @@ export const InteractiveMap = ({
 
   const center: LatLngExpression = [-2.1833, 111.4833]
 
+  const [isDarkMode, setIsDarkMode] = useState(
+    typeof document !== 'undefined' ? document.documentElement.classList.contains('dark') : true
+  );
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          setIsDarkMode(document.documentElement.classList.contains('dark'));
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
+  const tileUrl = isDarkMode 
+    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+
   // Get heatmap statistics
   const heatmapStats = getHeatmapStats(samplePoints)
 
@@ -81,11 +104,10 @@ export const InteractiveMap = ({
       ref={mapRef}
       center={center}
       zoom={12}
-      className="w-full h-full rounded-lg"
-      style={{ background: '#0F172A' }}
+      className="w-full h-full bg-background z-0"
     >
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        url={tileUrl}
         attribution='&copy; OpenStreetMap contributors &copy; CARTO'
       />
 
@@ -110,8 +132,8 @@ export const InteractiveMap = ({
         >
           <Popup className="popup-custom">
             <div className="text-sm space-y-2">
-              <p className="font-semibold text-white">{route.name}</p>
-              <p className="text-gray-300 text-xs">{route.description}</p>
+              <p className="font-semibold text-foreground">{route.name}</p>
+              <p className="text-muted-foreground text-xs">{route.description}</p>
             </div>
           </Popup>
         </Polyline>
@@ -136,10 +158,10 @@ export const InteractiveMap = ({
             >
               <Popup className="popup-custom">
                 <div className="text-sm space-y-2">
-                  <p className="font-semibold text-white">{point.locationName || `Point ${point.id}`}</p>
-                  <p className="text-accent-cyan font-mono">{formatCurrency(point.price)}</p>
-                  <p className="text-gray-300 text-xs">{point.description}</p>
-                  <div className="pt-2 border-t border-white/20 text-gray-400 text-xs">
+                  <p className="font-semibold text-foreground">{point.locationName || `Point ${point.id}`}</p>
+                  <p className="text-primary font-mono">{formatCurrency(point.price)}</p>
+                  <p className="text-muted-foreground text-xs">{point.description}</p>
+                  <div className="pt-2 border-t border-card-border text-muted-foreground text-xs">
                     <p>Distance to Toll: {point.distanceToTol?.toFixed(2)} km</p>
                     <p>Coordinates: {point.lat.toFixed(4)}, {point.lng.toFixed(4)}</p>
                   </div>
@@ -155,10 +177,10 @@ export const InteractiveMap = ({
           <Marker key={point.id} position={[point.lat, point.lng]} icon={samplePointIcon}>
             <Popup className="popup-custom">
               <div className="text-sm space-y-2">
-                <p className="font-semibold text-white">{point.locationName || `Sample Point ${point.id}`}</p>
-                <p className="text-accent-cyan font-mono">{formatCurrency(point.price)}</p>
-                <p className="text-gray-300 text-xs">{point.description}</p>
-                <div className="pt-2 border-t border-white/20 text-gray-400 text-xs">
+                <p className="font-semibold text-foreground">{point.locationName || `Sample Point ${point.id}`}</p>
+                <p className="text-primary font-mono">{formatCurrency(point.price)}</p>
+                <p className="text-muted-foreground text-xs">{point.description}</p>
+                <div className="pt-2 border-t border-card-border text-muted-foreground text-xs">
                   <p>Distance to Toll: {point.distanceToTol?.toFixed(2)} km</p>
                   <p>Coordinates: {point.lat.toFixed(4)}, {point.lng.toFixed(4)}</p>
                 </div>
@@ -172,8 +194,8 @@ export const InteractiveMap = ({
         <Marker position={[markerPosition.lat, markerPosition.lng]} icon={selectedIcon}>
           <Popup>
             <div className="text-sm">
-              <p className="font-semibold text-white">Prediction Location</p>
-              <p className="text-gray-300">{markerPosition.lat.toFixed(4)}, {markerPosition.lng.toFixed(4)}</p>
+              <p className="font-semibold text-foreground">Prediction Location</p>
+              <p className="text-muted-foreground">{markerPosition.lat.toFixed(4)}, {markerPosition.lng.toFixed(4)}</p>
             </div>
           </Popup>
         </Marker>

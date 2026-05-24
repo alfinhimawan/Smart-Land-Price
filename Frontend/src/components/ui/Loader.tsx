@@ -10,6 +10,6 @@ export const Loader = ({ size = 'md' }: LoaderProps) => {
   }
 
   return (
-    <div className={`${sizeMap[size]} border-2 border-white/20 border-t-accent-cyan rounded-full animate-spin`} />
+    <div className={`${sizeMap[size]} border-2 border-card-border border-t-primary rounded-full animate-spin`} />
   )
 }

@@ -20,8 +20,8 @@ export const Slider = ({
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">
-        <label className="text-sm font-medium text-gray-300">{label}</label>
-        <span className="text-sm font-semibold text-accent-cyan">
+        <label className="text-sm font-medium text-muted-foreground">{label}</label>
+        <span className="text-sm font-semibold text-primary">
           {value.toFixed(2)}
           {unit}
         </span>
@@ -33,7 +33,7 @@ export const Slider = ({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 bg-dark-700 rounded-lg appearance-none cursor-pointer accent-accent-cyan"
+        className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
       />
     </div>
   )

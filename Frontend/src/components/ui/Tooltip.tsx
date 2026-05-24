@@ -21,8 +21,8 @@ export const Tooltip = ({ content, children, position = 'top' }: TooltipProps) =
       <div
         className={cn(
           'absolute hidden group-hover:block z-50',
-          'bg-dark-800 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap',
-          'border border-white/20 shadow-lg',
+          'bg-card text-foreground text-sm px-3 py-2 rounded-lg whitespace-nowrap',
+          'border border-card-border shadow-lg',
           positionStyles[position]
         )}
       >
