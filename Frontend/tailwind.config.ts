@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,6 +9,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        background: 'rgb(var(--background) / <alpha-value>)',
+        foreground: 'rgb(var(--foreground) / <alpha-value>)',
+        primary: {
+          DEFAULT: 'rgb(var(--primary) / <alpha-value>)',
+          foreground: 'rgb(var(--primary-foreground) / <alpha-value>)',
+        },
+        secondary: {
+          DEFAULT: 'rgb(var(--secondary) / <alpha-value>)',
+          foreground: 'rgb(var(--secondary-foreground) / <alpha-value>)',
+        },
+        muted: {
+          DEFAULT: 'rgb(var(--muted) / <alpha-value>)',
+          foreground: 'rgb(var(--muted-foreground) / <alpha-value>)',
+        },
+        card: {
+          DEFAULT: 'rgb(var(--card) / <alpha-value>)',
+          border: 'rgb(var(--card-border) / <alpha-value>)',
+        },
         dark: {
           50: '#F9FAFB',
           100: '#F3F4F6',
@@ -49,10 +68,10 @@ const config: Config = {
       keyframes: {
         glow: {
           '0%, 100%': {
-            boxShadow: '0 0 5px rgba(0, 209, 255, 0.25)',
+            boxShadow: '0 0 5px rgba(var(--primary), 0.25)',
           },
           '50%': {
-            boxShadow: '0 0 20px rgba(0, 209, 255, 0.5)',
+            boxShadow: '0 0 20px rgba(var(--primary), 0.5)',
           },
         },
         float: {
@@ -64,7 +83,7 @@ const config: Config = {
         xs: '2px',
       },
       boxShadow: {
-        glow: '0 0 15px rgba(0, 209, 255, 0.4)',
+        glow: '0 0 15px rgba(var(--primary), 0.4)',
         'glow-blue': '0 0 15px rgba(59, 130, 246, 0.4)',
         elevated: '0 8px 32px rgba(0, 0, 0, 0.2)',
       },

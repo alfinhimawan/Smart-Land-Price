@@ -64,190 +64,192 @@ export default function DashboardPage() {
   }, [distanceFilter])
 
   return (
-    <div className="min-h-screen bg-dark-950 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
-      <div className="flex-1 pt-16 pb-20">
-        <PageContainer className="h-full">
-          <div className="max-w-7xl mx-auto h-full px-4 py-8">
-            {/* Statistics */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mb-8"
-            >
-              <StatisticsGrid samplePoints={samplePoints} />
-            </motion.div>
-
-            {/* Tab Navigation */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="mb-6 flex gap-2 border-b border-white/10"
-            >
-              <button
-                onClick={() => setActiveTab('map')}
-                className={`flex items-center gap-2 px-4 py-3 font-medium transition-all border-b-2 ${
-                  activeTab === 'map'
-                    ? 'text-accent-cyan border-accent-cyan'
-                    : 'text-gray-400 border-transparent hover:text-white'
-                }`}
+      <div className="flex-1 pt-28 pb-20">
+        <PageContainer>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+            
+            {/* Header Section */}
+            <div className="mt-4 mb-10">
+              <motion.h1 
+                className="text-3xl font-bold text-foreground"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.05 } },
+                  hidden: {}
+                }}
               >
-                <Map className="w-4 h-4" />
-                Peta Interaktif
-              </button>
-              <button
-                onClick={() => setActiveTab('data')}
-                className={`flex items-center gap-2 px-4 py-3 font-medium transition-all border-b-2 ${
-                  activeTab === 'data'
-                    ? 'text-accent-cyan border-accent-cyan'
-                    : 'text-gray-400 border-transparent hover:text-white'
-                }`}
-              >
-                <List className="w-4 h-4" />
-                Penjelajahi Data
-              </button>
-            </motion.div>
-
-            {/* Main Content */}
-            {activeTab === 'map' ? (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
-                {/* Sidebar - Controls and Map Filters */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                  className="space-y-6"
-                >
-                  {/* Map Controls */}
-                  <MapControls
-                    showHeatmap={showHeatmap}
-                    onHeatmapToggle={setShowHeatmap}
-                    radiusFilter={distanceFilter}
-                    onRadiusChange={setDistanceFilter}
-                    maxRadius={2.5}
-                    visiblePointsCount={visiblePoints.length}
-                    totalPointsCount={samplePoints.length}
+                {"Sistem Prediksi Harga Lahan".split("").map((char, i) => (
+                  <motion.span 
+                    key={i} 
+                    variants={{
+                      visible: { opacity: 1, display: "inline-block" },
+                      hidden: { opacity: 0, display: "none" }
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+                  <motion.span 
+                    variants={{
+                      visible: { visibility: "hidden", transition: { delay: 1.5 } },
+                      hidden: { visibility: "visible" }
+                    }}
+                    className="inline-block w-[3px] h-[1em] bg-primary ml-1 align-middle animate-pulse"
                   />
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, duration: 0.8 }}
+                className="text-muted-foreground mt-2"
+              >
+                Dasbor analisis cerdas menggunakan interpolasi Inverse Distance Weighting (IDW).
+              </motion.p>
+            </div>
 
-                  {/* Prediction Controls */}
-                  <Card variant="glass" className="space-y-6 sticky top-20">
-                    <div>
-                      <h3 className="text-lg font-bold text-white mb-4">Pengaturan Prediksi</h3>
-                    </div>
+            {/* Top Statistics */}
+            <div className="bg-card border border-card-border rounded-xl p-5 shadow-sm">
+               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Ringkasan Area Nusantara</h3>
+               <StatisticsGrid samplePoints={samplePoints} />
+            </div>
 
-                    {/* IDW Power Info */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <label className="text-sm font-medium text-white">Kekuatan IDW</label>
-                        <span className="text-xs font-mono text-accent-cyan">{idwPower.toFixed(1)}</span>
-                      </div>
-                      <input
-                        type="range"
-                        min={IDW_CONFIG.minPower}
-                        max={IDW_CONFIG.maxPower}
-                        step={0.1}
-                        value={idwPower}
-                        onChange={(e) => setIdwPower(parseFloat(e.target.value))}
-                        className="w-full accent-accent-cyan"
-                      />
-                      <p className="text-xs text-gray-400">Nilai lebih tinggi = titik terdekat berpengaruh lebih besar</p>
-                    </div>
+            {/* Main Interactive Workspace */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+               
+               {/* Map Area (Takes 2 columns) */}
+               <Card variant="glass" className="lg:col-span-2 overflow-hidden flex flex-col p-0 shadow-md">
+                 <div className="p-4 border-b border-card-border bg-card flex justify-between items-center">
+                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                     <Map className="w-5 h-5 text-primary" /> 
+                     Peta Interaktif
+                   </h2>
+                 </div>
+                 
+                 <div className="h-[500px] w-full relative z-0">
+                   <InteractiveMap
+                     onLocationSelect={handleLocationSelect}
+                     selectedLocation={selectedCoordinate}
+                     samplePoints={samplePoints}
+                     regionBound={iknBoundary}
+                     showHeatmap={showHeatmap}
+                     radiusFilter={distanceFilter}
+                   />
+                   {isLoading && (
+                     <div className="absolute inset-0 z-50">
+                       <LoadingOverlay />
+                     </div>
+                   )}
+                 </div>
 
-                    {/* Radius Info */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <label className="text-sm font-medium text-white">Radius Pencarian (km)</label>
-                        <span className="text-xs font-mono text-accent-cyan">{radiusFilter.toFixed(3)}</span>
-                      </div>
-                      <input
-                        type="range"
-                        min={IDW_CONFIG.minRadius}
-                        max={IDW_CONFIG.maxRadius}
-                        step={0.01}
-                        value={radiusFilter}
-                        onChange={(e) => setRadiusFilter(parseFloat(e.target.value))}
-                        className="w-full accent-accent-cyan"
-                      />
-                      <p className="text-xs text-gray-400">Rentang pencarian untuk titik sampel</p>
-                    </div>
-
-                    {/* Current Selection */}
-                    {selectedCoordinate && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="p-3 rounded-lg bg-accent-cyan/10 border border-accent-cyan/30"
-                      >
-                        <CoordinateInfo coordinate={selectedCoordinate} />
-                      </motion.div>
-                    )}
-
-                    {/* Buttons */}
-                    <div className="space-y-3 pt-4 border-t border-white/10">
-                      <Button
-                        variant="primary"
-                        className="w-full"
-                        disabled={!selectedCoordinate}
-                        onClick={handlePredict}
-                      >
-                        <Zap className="w-4 h-4" />
-                        Prediksi Harga
-                      </Button>
-                      <Button variant="outline" className="w-full" onClick={handleReset}>
-                        <RotateCcw className="w-4 h-4" />
-                        Reset
-                      </Button>
-                    </div>
-
-                    <p className="text-xs text-gray-500 text-center pt-4 border-t border-white/10">
-                      Klik pada peta untuk memilih lokasi untuk prediksi
-                    </p>
-                  </Card>
-                </motion.div>
-
-                {/* Map and Results */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.15 }}
-                  className="lg:col-span-3 space-y-6"
-                >
-                  {/* Map Container */}
-                  <Card variant="solid" className="h-96 lg:h-[600px] overflow-hidden p-0">
-                    <InteractiveMap
-                      onLocationSelect={handleLocationSelect}
-                      selectedLocation={selectedCoordinate}
-                      samplePoints={samplePoints}
-                      regionBound={iknBoundary}
+                 {/* Map Filter Controls placed elegantly below the map */}
+                 <div className="p-4 bg-card/50 border-t border-card-border backdrop-blur-md">
+                    <MapControls
                       showHeatmap={showHeatmap}
+                      onHeatmapToggle={setShowHeatmap}
                       radiusFilter={distanceFilter}
+                      onRadiusChange={setDistanceFilter}
+                      maxRadius={2.5}
+                      visiblePointsCount={visiblePoints.length}
+                      totalPointsCount={samplePoints.length}
                     />
-                  </Card>
+                 </div>
+               </Card>
 
-                  {/* Prediction Results */}
-                  {predictionResult && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <PredictionCard result={predictionResult} />
-                    </motion.div>
-                  )}
-                </motion.div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                {/* Data Explorer Sidebar */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                  className="lg:col-span-3"
-                >
+               {/* Right Control Panel (Takes 1 column) */}
+               <Card variant="glass" className="lg:col-span-1 shadow-md flex flex-col gap-6 p-5">
+                 <h2 className="text-lg font-bold text-foreground flex items-center gap-2 border-b border-card-border pb-3">
+                   <Zap className="w-5 h-5 text-primary" /> Parameter & Prediksi
+                 </h2>
+                 
+                 <div className="space-y-5">
+                   {/* IDW Power Slider */}
+                   <div className="space-y-2">
+                     <div className="flex justify-between items-center">
+                       <label className="text-sm font-medium text-foreground">Kekuatan (Power)</label>
+                       <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded">{idwPower.toFixed(1)}</span>
+                     </div>
+                     <input
+                       type="range"
+                       min={IDW_CONFIG.minPower}
+                       max={IDW_CONFIG.maxPower}
+                       step={0.1}
+                       value={idwPower}
+                       onChange={(e) => setIdwPower(parseFloat(e.target.value))}
+                       className="w-full accent-primary"
+                     />
+                   </div>
+
+                   {/* Radius Slider */}
+                   <div className="space-y-2">
+                     <div className="flex justify-between items-center">
+                       <label className="text-sm font-medium text-foreground">Radius Pencarian (km)</label>
+                       <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-1 rounded">{radiusFilter.toFixed(3)}</span>
+                     </div>
+                     <input
+                       type="range"
+                       min={IDW_CONFIG.minRadius}
+                       max={IDW_CONFIG.maxRadius}
+                       step={0.01}
+                       value={radiusFilter}
+                       onChange={(e) => setRadiusFilter(parseFloat(e.target.value))}
+                       className="w-full accent-primary"
+                     />
+                   </div>
+                 </div>
+
+                 <div className="pt-4 border-t border-card-border space-y-4">
+                   {selectedCoordinate ? (
+                     <div className="p-3 rounded-lg bg-card border border-primary/30 shadow-sm">
+                       <CoordinateInfo coordinate={selectedCoordinate} />
+                     </div>
+                   ) : (
+                     <div className="p-6 rounded-lg border-2 border-dashed border-card-border flex flex-col items-center justify-center text-center bg-card/30 h-28">
+                       <p className="text-sm text-muted-foreground">Klik koordinat pada peta untuk memulai.</p>
+                     </div>
+                   )}
+
+                   <div className="flex gap-2">
+                     <Button
+                       variant="primary"
+                       className="w-full flex-1 py-2.5"
+                       disabled={!selectedCoordinate}
+                       onClick={handlePredict}
+                     >
+                       Prediksi Harga
+                     </Button>
+                     <Button variant="outline" className="px-4" onClick={handleReset} aria-label="Reset">
+                       <RotateCcw className="w-5 h-5" />
+                     </Button>
+                   </div>
+                 </div>
+
+                 {/* Results Section directly appended if available */}
+                 {predictionResult && (
+                   <motion.div
+                     initial={{ opacity: 0, y: 10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className="pt-2"
+                   >
+                     <div className="rounded-xl overflow-hidden border border-primary/30 shadow-lg">
+                       <PredictionCard result={predictionResult} />
+                     </div>
+                   </motion.div>
+                 )}
+               </Card>
+            </div>
+
+            {/* Bottom Data Section */}
+            <Card variant="glass" className="shadow-md p-6">
+              <h2 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2 border-b border-card-border pb-3">
+                <List className="w-5 h-5 text-primary" /> Data Referensi Sampel Lahan
+              </h2>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
                   <SamplePointsExplorer
                     points={visiblePoints}
                     onPointSelect={handlePointSelect}
@@ -255,52 +257,47 @@ export default function DashboardPage() {
                     maxDistanceFilter={distanceFilter}
                     onDistanceFilterChange={setDistanceFilter}
                   />
-                </motion.div>
-
-                {/* Data Details Sidebar */}
-                {selectedPoint && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.15 }}
-                    className="lg:col-span-1"
-                  >
-                    <Card variant="glass" className="space-y-4 sticky top-20">
-                      <h3 className="text-lg font-bold text-white">Detail Lahan</h3>
-                      <div className="space-y-3 text-sm">
+                </div>
+                
+                <div className="lg:col-span-1">
+                  {selectedPoint ? (
+                    <div className="p-5 rounded-xl bg-card border border-card-border shadow-sm sticky top-24">
+                      <h3 className="text-base font-bold text-foreground mb-4 border-b border-card-border pb-2">Detail Titik Sampel</h3>
+                      <div className="space-y-4 text-sm">
                         <div>
-                          <p className="text-gray-400 text-xs mb-1">Nama Lokasi</p>
-                          <p className="text-white font-semibold">{selectedPoint.locationName}</p>
+                          <p className="text-muted-foreground text-xs mb-1 uppercase tracking-wider">Nama Lokasi</p>
+                          <p className="text-foreground font-semibold">{selectedPoint.locationName}</p>
                         </div>
                         <div>
-                          <p className="text-gray-400 text-xs mb-1">Harga Per Meter</p>
-                          <p className="text-accent-cyan font-mono text-lg">
-                            Rp {(selectedPoint.price / 1000000).toFixed(1)}jt
+                          <p className="text-muted-foreground text-xs mb-1 uppercase tracking-wider">Harga Pasar Per Meter</p>
+                          <p className="text-primary font-mono text-xl font-bold">
+                            Rp {(selectedPoint.price / 1000000).toFixed(1)} jt
                           </p>
                         </div>
-                        <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                          <p className="text-gray-400 text-xs mb-2">Jarak ke Tol</p>
-                          <p className="text-accent-blue font-semibold text-lg">
+                        <div className="p-3 rounded-lg bg-foreground/5 border border-card-border">
+                          <p className="text-muted-foreground text-xs mb-1 uppercase tracking-wider">Jarak ke Akses Tol</p>
+                          <p className="text-foreground font-semibold text-lg">
                             {selectedPoint.distanceToTol?.toFixed(2)} km
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-400 text-xs mb-1">Deskripsi</p>
-                          <p className="text-gray-300 text-xs leading-relaxed">{selectedPoint.description}</p>
+                          <p className="text-muted-foreground text-xs mb-1 uppercase tracking-wider">Catatan Area</p>
+                          <p className="text-muted-foreground text-sm leading-relaxed">{selectedPoint.description}</p>
                         </div>
                       </div>
-                    </Card>
-                  </motion.div>
-                )}
+                    </div>
+                  ) : (
+                    <div className="p-6 rounded-xl border-2 border-dashed border-card-border flex items-center justify-center text-center bg-card/30 h-full min-h-[200px]">
+                      <p className="text-sm text-muted-foreground">Pilih data lahan pada senarai di samping untuk melihat detail.</p>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
+            </Card>
 
-          {/* Loading Overlay */}
-          {isLoading && <LoadingOverlay />}
+          </div>
         </PageContainer>
       </div>
-
       <Footer />
     </div>
   )

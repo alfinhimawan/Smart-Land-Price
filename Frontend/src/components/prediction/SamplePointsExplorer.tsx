@@ -43,17 +43,17 @@ export const SamplePointsExplorer = ({
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
-        <List className="w-5 h-5 text-accent-cyan" />
-        <h2 className="text-lg font-bold text-white">Data Tanah</h2>
-        <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full">{points.length} titik</span>
+        <List className="w-5 h-5 text-primary" />
+        <h2 className="text-lg font-bold text-foreground">Data Tanah</h2>
+        <span className="text-xs text-muted-foreground bg-foreground/10 px-2 py-1 rounded-full">{points.length} titik</span>
       </div>
 
       {/* Distance Filter */}
       {onDistanceFilterChange && (
         <Card variant="glass" className="space-y-3">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-white">Filter Jarak ke Tol</label>
-            <span className="text-xs text-accent-cyan font-mono">{maxDistanceFilter.toFixed(2)} km</span>
+            <label className="text-sm font-medium text-foreground">Filter Jarak ke Tol</label>
+            <span className="text-xs text-primary font-mono">{maxDistanceFilter.toFixed(2)} km</span>
           </div>
           <Slider
             label=""
@@ -80,20 +80,20 @@ export const SamplePointsExplorer = ({
           ))
         ) : (
           <Card variant="glass" className="py-8 text-center">
-            <p className="text-sm text-gray-400">Tidak ada data yang cocok dengan filter saat ini</p>
+            <p className="text-sm text-muted-foreground">Tidak ada data yang cocok dengan filter saat ini</p>
           </Card>
         )}
       </div>
 
       {/* Stats */}
       <Card variant="glass" className="grid grid-cols-2 gap-3">
-        <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-          <p className="text-xs text-gray-400">Total Data</p>
-          <p className="text-2xl font-bold text-accent-cyan">{points.length}</p>
+        <div className="p-3 rounded-lg bg-foreground/5 border border-card-border">
+          <p className="text-xs text-muted-foreground">Total Data</p>
+          <p className="text-2xl font-bold text-primary">{points.length}</p>
         </div>
-        <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-          <p className="text-xs text-gray-400">Harga Rata-rata</p>
-          <p className="text-2xl font-bold text-accent-blue">
+        <div className="p-3 rounded-lg bg-foreground/5 border border-card-border">
+          <p className="text-xs text-muted-foreground">Harga Rata-rata</p>
+          <p className="text-2xl font-bold text-primary">
             {((points.reduce((sum, p) => sum + p.price, 0) / points.length) / 1000000).toFixed(1)}jt
           </p>
         </div>

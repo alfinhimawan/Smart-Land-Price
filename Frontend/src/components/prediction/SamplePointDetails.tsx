@@ -15,54 +15,54 @@ export const SamplePointDetails = ({ point, isSelected = false, onClick }: Sampl
     <motion.div
       whileHover={{ scale: isSelected ? 1 : 1.02 }}
       onClick={onClick}
-      className={`cursor-pointer transition-all ${isSelected ? 'ring-2 ring-accent-cyan' : ''}`}
+      className={`cursor-pointer transition-all ${isSelected ? 'ring-2 ring-primary' : ''}`}
     >
       <Card
         variant={isSelected ? 'gradient' : 'solid'}
-        className={`space-y-3 ${isSelected ? 'border-accent-cyan/50' : 'border-white/10'}`}
+        className={`space-y-3 ${isSelected ? 'border-primary/50' : 'border-card-border'}`}
       >
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="font-semibold text-white text-sm">{point.locationName || `Point ${point.id}`}</h3>
-            <p className="text-xs text-gray-400">{point.description}</p>
+            <h3 className="font-semibold text-foreground text-sm">{point.locationName || `Point ${point.id}`}</h3>
+            <p className="text-xs text-muted-foreground">{point.description}</p>
           </div>
           {isSelected && (
-            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-accent-cyan/20 text-accent-cyan">
+            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-primary/20 text-primary">
               Terpilih
             </span>
           )}
         </div>
 
         {/* Price */}
-        <div className="py-2 px-3 rounded-lg bg-accent-cyan/10 border border-accent-cyan/30">
-          <p className="text-xs text-gray-400 mb-1">Harga</p>
-          <p className="text-lg font-bold text-accent-cyan font-mono">{formatCurrency(point.price)}</p>
+        <div className="py-2 px-3 rounded-lg bg-primary/10 border border-primary/30">
+          <p className="text-xs text-muted-foreground mb-1">Harga</p>
+          <p className="text-lg font-bold text-primary font-mono">{formatCurrency(point.price)}</p>
         </div>
 
         {/* Details Grid */}
         <div className="grid grid-cols-2 gap-2">
           {/* Latitude */}
-          <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-            <p className="text-xs text-gray-500 flex items-center gap-1 mb-1">
+          <div className="p-2 rounded-lg bg-foreground/5 border border-card-border">
+            <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
               <MapPin className="w-3 h-3" />
               Lintang
             </p>
-            <p className="text-sm font-mono text-white">{point.lat.toFixed(4)}</p>
+            <p className="text-sm font-mono text-foreground">{point.lat.toFixed(4)}</p>
           </div>
 
           {/* Longitude */}
-          <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-            <p className="text-xs text-gray-500 flex items-center gap-1 mb-1">
+          <div className="p-2 rounded-lg bg-foreground/5 border border-card-border">
+            <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
               <Navigation className="w-3 h-3" />
               Bujur
             </p>
-            <p className="text-sm font-mono text-white">{point.lng.toFixed(4)}</p>
+            <p className="text-sm font-mono text-foreground">{point.lng.toFixed(4)}</p>
           </div>
 
           {/* Distance to Toll */}
-          <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-            <p className="text-xs text-gray-500 flex items-center gap-1 mb-1">
+          <div className="p-2 rounded-lg bg-foreground/5 border border-card-border">
+            <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
               <Smartphone className="w-3 h-3" />
               Jarak ke Tol
             </p>
@@ -70,9 +70,9 @@ export const SamplePointDetails = ({ point, isSelected = false, onClick }: Sampl
           </div>
 
           {/* ID */}
-          <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-            <p className="text-xs text-gray-500 mb-1">ID Tanah</p>
-            <p className="text-sm font-mono text-gray-300">{point.id}</p>
+          <div className="p-2 rounded-lg bg-foreground/5 border border-card-border">
+            <p className="text-xs text-muted-foreground mb-1">ID Tanah</p>
+            <p className="text-sm font-mono text-muted-foreground">{point.id}</p>
           </div>
         </div>
       </Card>

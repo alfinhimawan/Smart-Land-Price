@@ -11,7 +11,7 @@ export const Badge = ({ children, variant = 'info', size = 'md' }: BadgeProps) =
     success: 'bg-success/20 text-success',
     warning: 'bg-warning/20 text-warning',
     error: 'bg-error/20 text-error',
-    info: 'bg-accent-cyan/20 text-accent-cyan',
+    info: 'bg-primary/20 text-primary',
   }
 
   const sizes = {

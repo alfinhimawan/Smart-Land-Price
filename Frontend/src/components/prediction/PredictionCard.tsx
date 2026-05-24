@@ -73,7 +73,7 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
         <Button 
           variant="outline" 
           size="sm" 
-          className="flex items-center gap-2 border-accent-cyan/50 text-accent-cyan hover:bg-accent-cyan/10"
+          className="flex items-center gap-2 border-primary/50 text-primary hover:bg-primary/10"
           onClick={exportToPDF}
           disabled={isExporting}
         >
@@ -90,23 +90,23 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
       >
       {/* Main Result Card */}
       <motion.div variants={itemVariants}>
-        <Card variant="gradient" className="border-2 border-accent-cyan/50 shadow-glow">
+        <Card variant="gradient" className="border-2 border-primary/50 shadow-glow">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Harga Tanah Prediksi</h3>
+              <h3 className="text-lg font-semibold text-foreground">Harga Tanah Prediksi</h3>
               <Badge variant="success">Selesai</Badge>
             </div>
 
             <div className="space-y-2">
-              <p className="text-sm text-gray-400">Harga Estimasi</p>
+              <p className="text-sm text-muted-foreground">Harga Estimasi</p>
               <p className="text-4xl font-bold gradient-text">{formatPrice(result.predictedPrice)}</p>
             </div>
 
-            <div className="pt-4 border-t border-white/10">
+            <div className="pt-4 border-t border-card-border">
               <div className="flex items-center gap-2 text-sm">
                 <Zap className="w-4 h-4 text-warning" />
-                <span className="text-gray-300">
-                  Level Kepercayaan: <span className="text-accent-cyan font-semibold">{result.confidence}%</span>
+                <span className="text-muted-foreground">
+                  Level Kepercayaan: <span className="text-primary font-semibold">{result.confidence}%</span>
                 </span>
               </div>
             </div>
@@ -120,10 +120,10 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
         <Card>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-accent-cyan" />
-              <p className="text-xs font-semibold text-gray-400">Koordinat</p>
+              <MapPin className="w-4 h-4 text-primary" />
+              <p className="text-xs font-semibold text-muted-foreground">Koordinat</p>
             </div>
-            <p className="text-sm font-mono text-white">
+            <p className="text-sm font-mono text-foreground">
               {result.coordinates.lat.toFixed(4)}, {result.coordinates.lng.toFixed(4)}
             </p>
           </div>
@@ -133,10 +133,10 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
         <Card>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-accent-blue" />
-              <p className="text-xs font-semibold text-gray-400">Metode</p>
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <p className="text-xs font-semibold text-muted-foreground">Metode</p>
             </div>
-            <p className="text-sm font-mono text-white">IDW (p={result.powerUsed})</p>
+            <p className="text-sm font-mono text-foreground">IDW (p={result.powerUsed})</p>
           </div>
         </Card>
       </motion.div>
@@ -144,16 +144,16 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
       <motion.div variants={itemVariants}>
         <Card>
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-white">Titik Sampel Terdekat</h4>
+            <h4 className="text-sm font-semibold text-foreground">Titik Sampel Terdekat</h4>
             <div className="space-y-2">
               {result.nearestPoints.slice(0, 3).map((point) => (
-                <div key={point.id} className="flex items-center justify-between py-2 border-b border-white/10 last:border-0">
+                <div key={point.id} className="flex items-center justify-between py-2 border-b border-card-border last:border-0">
                   <div className="flex-1">
-                    <p className="text-sm text-gray-300">Titik #{point.id}</p>
-                    <p className="text-xs text-gray-500">{formatPrice(point.price)}</p>
+                    <p className="text-sm text-muted-foreground">Titik #{point.id}</p>
+                    <p className="text-xs text-muted-foreground">{formatPrice(point.price)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-mono text-accent-cyan">
+                    <p className="text-xs font-mono text-primary">
                       {((point.weight ?? 0) * 100).toFixed(0)}% bobot
                     </p>
                   </div>
@@ -167,7 +167,7 @@ export const PredictionCard = ({ result }: PredictionCardProps) => {
       {/* IDW Formula Info */}
       <motion.div variants={itemVariants}>
         <Card variant="solid" className="text-center">
-          <p className="text-xs text-gray-400 font-mono">
+          <p className="text-xs text-muted-foreground font-mono">
             Z(x₀) = Σ(Zᵢ/dᵢ²) / Σ(1/dᵢ²)
           </p>
         </Card>

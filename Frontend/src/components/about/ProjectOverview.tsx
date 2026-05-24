@@ -39,8 +39,8 @@ export const ProjectOverview = () => {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
                 <Card variant="glass">
-                  <h3 className="text-xl font-bold text-white mb-4">{section.title}</h3>
-                  <p className="text-gray-300 leading-relaxed">{section.content}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-4">{section.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{section.content}</p>
                 </Card>
               </motion.div>
             ))}

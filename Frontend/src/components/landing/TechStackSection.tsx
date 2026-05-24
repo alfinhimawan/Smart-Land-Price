@@ -12,7 +12,7 @@ export const TechStackSection = () => {
   ]
 
   return (
-    <section className="py-20 px-4 bg-dark-900/50">
+    <section className="py-20 px-4 bg-card/50">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -34,11 +34,11 @@ export const TechStackSection = () => {
             <motion.div
               key={idx}
               whileHover={{ scale: 1.05, y: -5 }}
-              className="flex flex-col items-center p-4 rounded-lg bg-white/5 border border-white/10 hover:border-accent-cyan/50 hover:bg-accent-cyan/5 transition-all group"
+              className="flex flex-col items-center p-4 rounded-lg bg-foreground/5 border border-card-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
             >
-              <div className="text-accent-cyan group-hover:text-accent-blue mb-3 transition-colors">{tech.icon}</div>
-              <h3 className="font-semibold text-white text-sm text-center">{tech.name}</h3>
-              <p className="text-xs text-gray-500 text-center mt-1">{tech.desc}</p>
+              <div className="text-primary group-hover:text-primary mb-3 transition-colors">{tech.icon}</div>
+              <h3 className="font-semibold text-foreground text-sm text-center">{tech.name}</h3>
+              <p className="text-xs text-muted-foreground text-center mt-1">{tech.desc}</p>
             </motion.div>
           ))}
         </motion.div>

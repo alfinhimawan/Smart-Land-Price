@@ -20,9 +20,9 @@ export const Button = ({
   const baseStyles = 'rounded-lg font-medium transition-all duration-300 flex items-center gap-2 justify-center'
 
   const variants = {
-    primary: 'bg-accent-cyan text-dark-950 hover:opacity-90',
-    secondary: 'bg-accent-blue text-white hover:opacity-90',
-    outline: 'border border-accent-cyan text-accent-cyan hover:bg-accent-cyan/10',
+    primary: 'bg-primary text-dark-950 hover:opacity-90',
+    secondary: 'bg-primary text-foreground hover:opacity-90',
+    outline: 'border border-primary text-primary hover:bg-primary/10',
   }
 
   const sizes = {
