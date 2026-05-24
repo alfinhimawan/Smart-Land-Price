@@ -12,6 +12,19 @@ def calculate_idw(
     if not dataset:
         raise ValueError("Dataset tidak boleh kosong.")
 
+    # Validasi Geografis: Cek apakah koordinat terlalu jauh dari area sampel
+    # Batas toleransi 0.5 derajat Euclidean (sekitar 55 kilometer)
+    min_distance = min(
+        math.sqrt((data.latitude - target_x) ** 2 + (data.longitude - target_y) ** 2)
+        for data in dataset
+    )
+    
+    if min_distance > 0.5:
+        raise ValueError(
+            f"Koordinat ({target_x}, {target_y}) terlalu jauh dari area sampel IKN/Balikpapan. "
+            "Mohon pilih lokasi di dalam atau sekitar koridor pembangunan tol."
+        )
+
     logs = []
     numerator = 0.0
     denominator = 0.0
