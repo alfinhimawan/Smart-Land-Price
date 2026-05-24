@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Menu, X, ChevronRight, Github, Home, Map, Info, CheckCircle, Sun, Moon, Crosshair } from 'lucide-react'
+import { MapPin, Menu, X, ChevronRight, Home, Map, Info, CheckCircle, Sun, Moon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui'
 import { useTheme } from '@/hooks/useTheme'

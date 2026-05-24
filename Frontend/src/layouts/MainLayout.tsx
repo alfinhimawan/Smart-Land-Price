@@ -1,6 +1,5 @@
-export { Navbar } from './Navbar'
-export { Footer } from './Footer'
-export { PageContainer } from './PageContainer'
+import { Navbar } from '@/components/layout/Navbar'
+import { Footer } from '@/components/layout/Footer'
 
 import { Outlet } from 'react-router-dom'
 
