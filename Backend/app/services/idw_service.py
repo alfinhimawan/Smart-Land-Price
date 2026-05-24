@@ -132,4 +132,8 @@ def calculate_idw(
     logs.sort(key=lambda x: x["weight"], reverse=True)
     top_logs = logs[:5]
 
-    return {"predicted_price": round(predicted_price, 2), "logs": top_logs}
+    return {
+        "predicted_price": round(predicted_price, 2), 
+        "total_samples_used": len(cleaned_dataset),
+        "logs": top_logs
+    }

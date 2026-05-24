@@ -63,31 +63,79 @@ ZONAS = {
     "pemaluan": (-0.9800, 116.7500),
     "pulau balang": (-1.1120, 116.7320),
     "karang jinawi": (-0.9900, 116.8800),
-    "telemow": (-1.0560, 116.7010),
-    "sukaraja": (-0.9500, 116.8500),
-    "sepaku": (-0.9600, 116.7000),
-    "semoi": (-0.9800, 116.8500),
-    "maridan": (-1.0400, 116.7400),
-    "binuang": (-0.9700, 116.8600),
-    "argo mulyo": (-0.9500, 116.8800),
-    "wonosari": (-0.9200, 116.9000),
-    "mentawir": (-1.0500, 116.7500),
-    "sukomulyo": (-0.9400, 116.8700),
-    "bukit raya": (-0.9300, 116.8900),
-    "manggar": (-1.2180, 116.8920),
-    "baru ulu": (-1.2400, 116.8200),
-    "km 46": (-0.9800, 117.0200),
-    "hutan lindung": (-1.1500, 116.9500),
-    "penajam": (-1.1500, 116.7000),
-    "loa janan": (-0.8500, 117.0000),
+    "soekarno-hatta km 8": (-1.2150, 116.8500), # Jl. Soekarno Hatta KM 8
+    "rest area km 14": (-1.1750, 116.8600),     # Rest Area Tol Balsam
+    "tempadung": (-1.1460, 116.8000),           # Interchange Tempadung
+    "pulau balang": (-1.1120, 116.7320),        # Jembatan Pulau Balang
+    "gersik": (-1.1330, 116.7530),              # Desa Gersik
+    "km 38 samboja": (-1.0190, 116.9860),       # Exit Tol Samboja KM 38
+    "bumi harapan": (-0.9450, 116.7060),        # KIPP IKN / Bumi Harapan
+    "pemaluan": (-0.9800, 116.7100),            # Kelurahan Pemaluan
+    "maridan": (-1.0600, 116.7300),             # Kelurahan Maridan
+    "telemow": (-1.0700, 116.7500),             # Desa Telemow
+    "mentawir": (-1.0200, 116.7500),            # Desa Mentawir
+    "tengin baru": (-0.9500, 116.7500),         # Desa Tengin Baru
+    "karang jinawi": (-1.0500, 116.7800),       # Desa Karang Jinawi
+    "binuang": (-0.9900, 116.7700),             # Desa Binuang
+    "semoi dua": (-0.9600, 116.8300),           # Desa Semoi Dua
+    "argo mulyo": (-0.9500, 116.8500),          # Desa Argo Mulyo
+    "wonosari": (-0.9400, 116.8800),            # Desa Wonosari
+    "sukomulyo": (-0.9200, 116.8000),           # Desa Sukomulyo
+    "suko mulyo": (-0.9200, 116.8000),
+    "bukit raya": (-0.9100, 116.7500),          # Desa Bukit Raya
+    "sepaku": (-0.9200, 116.7800),              # Kecamatan Sepaku
+    "baru ilir": (-1.2300, 116.8200),           # Balikpapan Barat (Baru Ilir)
+    "baru ulu": (-1.2350, 116.8100),            # Balikpapan Barat (Baru Ulu)
+    "balikpapan barat": (-1.2200, 116.8100),
+    "loa janan": (-0.5800, 117.0900),           # Loa Janan (Sangat Jauh)
+    "penajam": (-1.2500, 116.7500),             # Penajam Paser Utara
+    "kariangau": (-1.2134, 116.7821),           # Default Kariangau KIK
+    "samboja": (-1.0180, 116.9880),             # Default Samboja
 }
 
 
+import re
+
 def get_base_coord(nama_lokasi: str):
-    nama = nama_lokasi.lower()
-    for key, coord in ZONAS.items():
+    # Bersihkan nama lokasi dari karakter aneh/tanda baca
+    nama = re.sub(r'[^a-z0-9]', '', nama_lokasi.lower())
+    
+    # Kunci pencarian disederhanakan tanpa tanda baca (alfanumerik murni)
+    ZONAS_CLEAN = {
+        "soekarnohattakm8": (-1.2150, 116.8500),
+        "restareakm14": (-1.1750, 116.8600),
+        "tempadung": (-1.1460, 116.8000),
+        "pulaubalang": (-1.1120, 116.7320),
+        "gersik": (-1.1330, 116.7530),
+        "km38samboja": (-1.0190, 116.9860),
+        "bumiharapan": (-0.9450, 116.7060),
+        "pemaluan": (-0.9800, 116.7100),
+        "maridan": (-1.0600, 116.7300),
+        "telemow": (-1.0700, 116.7500),
+        "mentawir": (-1.0200, 116.7500),
+        "tenginbaru": (-0.9500, 116.7500),
+        "karangjinawi": (-1.0500, 116.7800),
+        "binuang": (-0.9900, 116.7700),
+        "semoidua": (-0.9600, 116.8300),
+        "argomulyo": (-0.9500, 116.8500),
+        "wonosari": (-0.9400, 116.8800),
+        "sukomulyo": (-0.9200, 116.8000),
+        "bukitraya": (-0.9100, 116.7500),
+        "sepaku": (-0.9200, 116.7800),
+        "baruilir": (-1.2300, 116.8200),
+        "baruulu": (-1.2350, 116.8100),
+        "balikpapanbarat": (-1.2200, 116.8100),
+        "loajanan": (-0.5800, 117.0900),
+        "penajam": (-1.2500, 116.7500),
+        "kariangau": (-1.2134, 116.7821),
+        "samboja": (-1.0180, 116.9880),
+    }
+
+    # Cocokkan substring
+    for key, coord in ZONAS_CLEAN.items():
         if key in nama:
             return coord
+            
     return (-1.0200, 116.8000)  # Default Center
 
 

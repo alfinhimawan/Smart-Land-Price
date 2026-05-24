@@ -50,4 +50,5 @@ class IDWLog(BaseModel):
 # Schema untuk response hasil Prediksi IDW
 class PredictResponse(BaseModel):
     predicted_price: float
+    total_samples_used: int
     logs: list[IDWLog]
