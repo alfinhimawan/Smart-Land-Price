@@ -1,4 +1,4 @@
-# Smart Land Price - IKN Spatial Dashboard 🌍
+# SISTEM INFORMASI GEOGRAFIS PREDIKSI HARGA LAHAN KORIDOR TOL IKN BERBASIS METODE INVERSE DISTANCE WEIGHTING (IDW) 🌍
 
 **[🚀 LIHAT LIVE DEMO](https://smart-land-price.vercel.app)** | **[📚 BUKA API DOCS](https://smart-land-price-api.vercel.app/docs)**
 
