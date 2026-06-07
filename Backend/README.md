@@ -36,11 +36,11 @@ Backend API berkinerja tinggi yang dibangun dengan **FastAPI (Python)** untuk pr
    pip install -r requirements.txt
    ```
 
-3. **Konfigurasi Database**
-   - Pastikan PostgreSQL sudah terinstall dan berjalan di komputer Anda.
-   - Buat database baru bernama `webgis_ikn` (atau nama lain).
+3. **Konfigurasi Database (PostgreSQL / Supabase)**
+   - Pastikan PostgreSQL terinstall lokal, **ATAU** gunakan layanan cloud seperti **Supabase**.
+   - Buat database baru (misal: `webgis_ikn`).
    - _Copy_ file `.env.example` dan ubah namanya menjadi `.env`.
-   - Isi kredensial database Anda (password, user, dll) di file `.env` tersebut.
+   - Isi kredensial database Anda (URL koneksi Supabase / lokal) di file `.env` tersebut.
 
 4. **Jalankan Aplikasi Uvicorn**
    ```bash

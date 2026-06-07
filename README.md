@@ -53,7 +53,7 @@ Karena proyek terbagi dua, silakan ikuti panduan di masing-masing folder:
 Proyek ini telah dikonfigurasi untuk berjalan mulus di lingkungan _cloud_ (Vercel):
 * **Frontend:** Di-deploy via **Vercel** (`smart-land-price.vercel.app`)
 * **Backend:** Di-deploy via **Vercel Serverless Functions** Python (`smart-land-price-api.vercel.app`)
-* **Database:** Di-hosting terpisah menggunakan PostgreSQL Cloud (misalnya Supabase/Neon).
+* **Database:** Di-hosting terpisah menggunakan **Supabase** (PostgreSQL Cloud). _**Catatan Penting:** Karena menggunakan layanan gratis (Free Tier), database Supabase akan otomatis memasuki mode "Pause/Tidur" jika tidak ada aktivitas selama 7 hari. Jika peta tidak memunculkan data, silakan hubungi pengembang untuk me-resume database._
 
 ---
 
