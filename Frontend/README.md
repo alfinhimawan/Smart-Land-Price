@@ -1,5 +1,7 @@
 # Smart Land Price Prediction - IKN Spatial Dashboard
 
+**[🚀 LIVE DEMO APLIKASI WEBGIS](https://smart-land-price.vercel.app)**
+
 A premium modern GIS dashboard frontend application for interactive land price prediction using IDW (Inverse Distance Weighted) interpolation around the IKN region.
 
 ## 🚀 Features
@@ -23,25 +25,31 @@ A premium modern GIS dashboard frontend application for interactive land price p
 
 ## 📦 Installation
 
-1. Navigate to project directory:
+1. Masuk ke direktori Frontend dari root proyek:
 
 ```bash
-cd smart-land-price
+cd Frontend
 ```
 
-2. Install dependencies:
+2. Instalasi dependensi:
 
 ```bash
 npm install
 ```
 
-3. Start development server:
+3. Konfigurasi Environment Variables:
+Copy file `.env.example` menjadi `.env` dan pastikan URL backend sudah sesuai.
+```bash
+cp .env.example .env
+```
+
+4. Jalankan *development server*:
 
 ```bash
 npm run dev
 ```
 
-4. Build for production:
+5. Build untuk tahap *production*:
 
 ```bash
 npm run build
@@ -141,9 +149,9 @@ The application uses **Inverse Distance Weighted (IDW)** spatial interpolation:
 3. **Parameter p**: Controls how strongly distance affects weighting (default: 2)
 4. **Application**: Land price prediction based on sample locations
 
-## 📊 Sample Data
+## 📊 Integrasi Data (Backend)
 
-The system includes 15 sample data points representing land prices within the IKN region. All data is for demonstration purposes.
+Sistem ini menampilkan lebih dari 50 titik sampel aktual dari koridor tol IKN dan sekitarnya. Seluruh data geografis (latitude, longitude) dan atribut lahan (harga, jarak, keterangan) ditarik secara dinamis dari API FastAPI dan Database PostgreSQL, sehingga memastikan integritas dan sentralisasi data.
 
 ## 🚀 Performance
 
@@ -152,21 +160,24 @@ The system includes 15 sample data points representing land prices within the IK
 - **Prediction time**: ~1.5 seconds (with animation)
 - **Map interaction**: 60 FPS
 
-## 🔐 Security Notes
+## 🔐 Arsitektur Sistem
 
-- Frontend-only application
-- No backend API calls
-- No user authentication
-- All calculations performed client-side
-- No data persistence
+- Aplikasi ini merupakan presentasi visual (Client-side)
+- Terhubung secara _real-time_ ke REST API Backend FastAPI
+- Semua kalkulasi berat IDW dan pengambilan database spasial ditangani oleh server Backend
+- Frontend hanya fokus pada visualisasi peta spasial dan render UI/UX berkecepatan tinggi
 
 ## 📝 License
 
 This project is created for educational purposes.
 
-## 👥 Credits
+## 👥 Tim Pengembang (Frontend)
 
-Built with modern web technologies for advanced GIS visualization and spatial analysis.
+Bagian antarmuka WebGIS ini dikembangkan secara khusus oleh:
+- **Mitchel Artica (24051130090)** — _Frontend Developer (Pemetaan & UI)_
+- **Muhammad Ghafur Amanu Putra Wardana (24051130103)** — _Frontend Developer (Integrasi API & Log)_
+
+_(Untuk daftar tim lengkap dan pembagian tugas *full-stack*, silakan lihat `README.md` di root utama proyek)._
 
 ---
 

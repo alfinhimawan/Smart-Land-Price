@@ -1,5 +1,7 @@
 # Smart Land Price API (Backend) 🌍
 
+**[📚 LIHAT DOKUMENTASI API (SWAGGER UI)](https://smart-land-price-api.vercel.app/docs)**
+
 Backend API berkinerja tinggi yang dibangun dengan **FastAPI (Python)** untuk proyek WebGIS Prediksi Harga Lahan di koridor Balikpapan-IKN. Core dari backend ini adalah algoritma kalkulasi spasial **Inverse Distance Weighting (IDW)**.
 
 ## 🚀 Fitur Utama
@@ -15,10 +17,18 @@ Backend API berkinerja tinggi yang dibangun dengan **FastAPI (Python)** untuk pr
 
 ## 📦 Cara Setup & Menjalankan Server (Local Development)
 
-1. **Buat & Aktifkan Virtual Environment**
+1. **Masuk ke Direktori Backend**
+   ```bash
+   cd Backend
+   ```
+
+2. **Buat & Aktifkan Virtual Environment**
    ```bash
    python -m venv venv
+   # Di Windows:
    .\venv\Scripts\activate
+   # Di Mac/Linux:
+   source venv/bin/activate
    ```
 
 2. **Install Dependensi**
@@ -41,10 +51,14 @@ Backend API berkinerja tinggi yang dibangun dengan **FastAPI (Python)** untuk pr
    Buka _browser_ kesayangan Anda dan akses dokumentasi API interaktif di:
    👉 **[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)**
 
-## 👨‍💻 Peran & Tanggung Jawab
-**Alfin Himawan Santosa** (Backend Developer & Data Engineer)
+## 👨‍💻 Tim Pengembang (Backend & QA)
 
-**Rincian Tugas Utama:**
-1. **Pembuatan Data**: Mencari titik koordinat di sekitar Tol Balikpapan-IKN via Google Maps dan menetapkan harga logis (_dummy data_).
-2. **Database**: Mengelola data spasial tersebut ke dalam sistem database (PostgreSQL).
-3. **API & Logika IDW**: Membangun API (FastAPI/Python) yang akan menarik data dari database dan mengeksekusi perhitungan rumus IDW secara *real-time* saat menerima _request_ prediksi dari _frontend_.
+Bagian *core logic* numerik dan pengujian sistem ini dikembangkan oleh:
+
+**1. Alfin Himawan Santosa (24051130081) — _Backend Developer & Data Engineer_**
+- Bertanggung jawab penuh atas arsitektur database, desain API FastAPI, pencarian sampel *real-world* via Google Maps, dan implementasi algoritma spasial Inverse Distance Weighting (IDW).
+
+**2. Pramudya Tien Meylandri (24051130088) — _Quality Assurance (QA) & System Analyst_**
+- Bertanggung jawab menyusun skenario pengujian (Test Case), melakukan hitung matematis manual sebagai referensi _Expected Output_, dan memvalidasi keakuratan _endpoint_ API backend secara saintifik.
+
+_(Untuk daftar tim lengkap dan pembagian tugas *full-stack*, silakan lihat `README.md` di root utama proyek)._

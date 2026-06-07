@@ -8,6 +8,16 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# IDEs
+# IDEs & OS Files
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
+
+# Database (Jika pakai lokal)
+*.sqlite3
+
+# Logs & Testing
+*.log
+.pytest_cache/
+htmlcov/

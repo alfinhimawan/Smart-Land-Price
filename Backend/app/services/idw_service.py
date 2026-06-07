@@ -52,7 +52,11 @@ def filter_outliers_iqr(dataset: List[DataLahan]) -> List[DataLahan]:
 
 
 def calculate_idw(
-    target_x: float, target_y: float, dataset: List[DataLahan], power: float = 2.0, radius_km: float = 50.0
+    target_x: float,
+    target_y: float,
+    dataset: List[DataLahan],
+    power: float = 2.0,
+    radius_km: float = 50.0,
 ) -> Dict[str, Any]:
     """
     Menghitung estimasi harga menggunakan Inverse Distance Weighting (IDW).
@@ -141,7 +145,7 @@ def calculate_idw(
     top_logs = logs[:5]
 
     return {
-        "predicted_price": round(predicted_price, 2), 
+        "predicted_price": round(predicted_price, 2),
         "total_samples_used": len(cleaned_dataset),
-        "logs": top_logs
+        "logs": top_logs,
     }

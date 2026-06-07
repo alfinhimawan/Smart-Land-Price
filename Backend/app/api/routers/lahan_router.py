@@ -35,10 +35,10 @@ async def predict_price(
     try:
         # Panggil fungsi core logic bisnis kita di idw_service.py
         result = calculate_idw(
-            target_x=request.latitude, 
-            target_y=request.longitude, 
+            target_x=request.latitude,
+            target_y=request.longitude,
             dataset=dataset,
-            radius_km=request.radius_km
+            radius_km=request.radius_km,
         )
         return result
     except ValueError as e:

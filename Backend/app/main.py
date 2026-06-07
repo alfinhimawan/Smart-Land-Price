@@ -14,7 +14,7 @@ def get_application():
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.BACKEND_CORS_ORIGINS,
-        allow_credentials=True,
+        allow_credentials=False,
         allow_methods=["*"],  # Mengizinkan semua method HTTP
         allow_headers=["*"],  # Mengizinkan semua header
     )
